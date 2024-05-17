@@ -1,6 +1,8 @@
 import { Node } from "../model/Grid";
+import { BinaryHeap } from "./BinaryHeap";
 
 export class Dijkstra{
+
     dijkstra(grid:Node[][],startNode:Node,finishNode:Node){
 
         const visitedNodes:Node[] = [];
@@ -8,7 +10,7 @@ export class Dijkstra{
         const unvisitedNode = this.getRemainingNodes(grid);
         while(!!unvisitedNode.length){ //undefined is false
             this.sortNodesByDistance(unvisitedNode); 
-            const closestNode = unvisitedNode.shift();//get Min
+            const closestNode = unvisitedNode.shift();//get Min //EXTRACT KEY
             if(!closestNode) continue; //if undefined
             if(closestNode.isWall) continue; /// If wall
             // if(closestNode.value!='' && closestNode.value!=startNode.value) continue; //IF SAME COLOR IS WALL
@@ -19,8 +21,9 @@ export class Dijkstra{
             this.updateVistedNeighbors(closestNode,grid);
         }
     }
-    private getRemainingNodes(grid:Node[][]){ //Complexity?!??!
+    private getRemainingNodes(grid:Node[][]){ //With heap O(n) Insert
         const nodes:Node[] = [];
+
         for(let row of grid){
             for(let node of row){
                 nodes.push(node);
@@ -28,7 +31,7 @@ export class Dijkstra{
         }
         return nodes;
     }
-    private sortNodesByDistance(unvisitedNodes:Node[]){
+    private sortNodesByDistance(unvisitedNodes:Node[]){ //NO NEED TO SORT
         unvisitedNodes.sort((a,b)=>a.distance - b.distance);
 
     }

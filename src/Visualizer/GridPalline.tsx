@@ -32,7 +32,7 @@ function GridPalline() {
             let copy = [...matrix];
             operations.push({i:i,j:j,color:eraser?'':color.hex,prevColor:copy[i][j].value});
             copy[i][j].value=eraser?'':color.hex;
-            copy[i][j].isWall=true;
+            copy[i][j].isWall=eraser?false:true;
             setMatrix(copy);
         }
       
@@ -48,8 +48,8 @@ function GridPalline() {
         setMatrix(copy);
     }
     function handleClick(i:number,j:number){
+        let copy = [...matrix];
         if(isStart===0){
-            let copy = [...matrix]
             copy[i][j].value='#01ff00';
             Grid.START_NODE_ROW = i;
             Grid.START_NODE_COL = j;
@@ -57,7 +57,7 @@ function GridPalline() {
             changeStart(1);
             return;
         }else if(isStart===1){
-            let copy = [...matrix]
+
             copy[i][j].value='#fe0000';
             Grid.FINISH_NODE_ROW = i;
             Grid.FINISH_NODE_COL = j;
@@ -67,16 +67,15 @@ function GridPalline() {
         }
         setGo(true);
         if(eraser){
-            let copy = [...matrix]
             operations.push({i:i,j:j,color:'',prevColor:copy[i][j].value});
             copy[i][j].value='';
+            copy[i][j].isWall=false;
             setMatrix(copy);
             return;
         }
         pushColor(color);
-        let copy = [...matrix]
         operations.push({i:i,j:j,color:eraser?'':color.hex,prevColor:copy[i][j].value});
-        copy[i][j].isWall=copy[i][j].value!==color.hex?true:false;//if color i paint different than prev 
+        copy[i][j].isWall=eraser?false:true;
         copy[i][j].value = eraser?'':color.hex;
         
         setMatrix(copy);
@@ -118,7 +117,7 @@ function animateDijkstra(visitedNodes:Node[],nodesInshortestPath:Node[]){
         setTimeout(() => {
           const node = visitedNodes[i];
           let copy = [...matrix];
-          copy[node.row][node.col].value=color.hex;
+          copy[node.row][node.col].value="#aee4ac";
           setMatrix(copy);
         }, 10 * i);
       }
@@ -135,15 +134,28 @@ function animateShortestPath(nodesInshortestPath:Node[]) {
     }
   }
 function visualizeDijkstra(){
-    const grid = [...matrix]
+    const grid =matrix;
     const startNode = grid[Grid.START_NODE_ROW][Grid.START_NODE_COL];
     const finishNode = grid[Grid.FINISH_NODE_ROW][Grid.FINISH_NODE_COL];
     const algorithm = new Dijkstra();
     const visitedNodes = algorithm.dijkstra(grid,startNode,finishNode);
     const nodesInshortestPath = algorithm.getNodesInShortestPathOrder(finishNode);
     animateDijkstra(visitedNodes!,nodesInshortestPath); //DO NOT FORCE !
-
+    
 }   
+function addLine(){
+    let width=matrix[0].length;
+    let heigth=matrix.length+1;
+    const init = new Grid(width,heigth);
+    setMatrix(init.nodes);
+
+}
+function removeLine(){
+    let width=matrix[0].length;
+    let heigth=matrix.length-1;
+    const init = new Grid(width,heigth);
+    setMatrix(init.nodes);
+}
 
   return (
     <>
@@ -195,11 +207,17 @@ function visualizeDijkstra(){
             <button className='backButton'onClick={()=>handlePrevState()}>Cancel</button>
             <Eraser onClick={()=>setEraser(!eraser)} width={80} height={80} style={{opacity:eraser?0.4:1}}/>
             <button className='backButton'onClick={()=>handleClear()}>Clear</button>
-            <button className='backButton' onClick={() => visualizeDijkstra()}>
+            <button className='backButton' onClick={() =>visualizeDijkstra()}>
             Maze game
             </button>
             <button className='backButton' onClick={() => changeStart(0)}>
              Set Start and finish
+            </button>
+            <button className='backButton' onClick={() => addLine()}>
+             +1
+            </button>
+            <button className='backButton' onClick={() => removeLine()}>
+            -1
             </button>
         </div>
         </div>

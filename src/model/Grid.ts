@@ -11,7 +11,11 @@ export class Grid{
     // matrix:string[][] =[[]];
     nodes:Node[][] =[];
     
-    constructor(){
+    constructor(_width?:number,_heigth?:number){
+        if(_width)
+            this.width = _width;
+        if(_heigth)
+            this.heigth=_heigth;
         for(let i=0;i<this.heigth;i++){
             // this.matrix[i] = Array(this.width).fill('');
             let currentRow:Node[]= [];
@@ -35,15 +39,14 @@ export class Grid{
 }
 export class Node{
     
-
     row: number;
     col: number;
 
     constructor(private _row:number,private _col:number){
         this.row = _row;
         this.col = _col;
-
     }
+    
     value:string = '';
     isStart:boolean = this._row === Grid.START_NODE_ROW && this._col === Grid.START_NODE_COL;
     isFinish:boolean = this._row === Grid.FINISH_NODE_ROW && this._col === Grid.FINISH_NODE_COL;
