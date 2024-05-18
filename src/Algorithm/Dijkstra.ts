@@ -1,5 +1,4 @@
 import { Node } from "../model/Grid";
-import { BinaryHeap } from "./BinaryHeap";
 
 export class Dijkstra{
 
