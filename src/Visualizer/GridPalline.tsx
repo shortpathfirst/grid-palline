@@ -224,4 +224,4 @@ function GridPalline() {
   )
 }
 
-export default GridPalline
+export default GridPalline;
