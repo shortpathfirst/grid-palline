@@ -5,7 +5,8 @@ import "react-color-palette/css";
 import Pallina from './Pallina';
 import { Operation } from '../model/Operation';
 import { Grid } from '../model/Grid';
-import { ReactComponent as Eraser } from '../Assets/Eraser_icon.svg';
+// import { ReactComponent as Eraser } from '../Assets/Eraser_icon.svg';
+import  logo from '../Assets/Eraser_icon.svg';
 import { Node } from '../model/Grid';
 import { Dijkstra } from '../Algorithm/Dijkstra';
 
@@ -15,7 +16,7 @@ const enum grid{
     start=0,
     finish=1,
 }
-function GridPalline() {
+export default function GridPalline() {
 
     const nodes = ()=>new Grid().nodes;                         //To not call constructor everytime it render
     const [matrix,setMatrix] = useState(nodes);                 //Grid matrix
@@ -202,7 +203,8 @@ function GridPalline() {
         <ColorPicker color={color} onChange={setColor} />
         <div className='actionButtons'>
             <button className='backButton'onClick={()=>handlePrevState()}>Cancel</button>
-            <Eraser onClick={()=>setEraser(!eraser)} width={80} height={80} style={{opacity:eraser?0.4:1}}/>
+            {/* <Eraser onClick={()=>setEraser(!eraser)} width={80} height={80} style={{opacity:eraser?0.4:1}}/> */}
+            <img src={logo} onClick={()=>setEraser(!eraser)} width={80} height={80} style={{opacity:eraser?0.4:1}}/>
             <button className='backButton'onClick={()=>handleClear()}>Clear</button>
             <button className='backButton' onClick={() =>visualizeDijkstra()}>
             Maze game
@@ -224,4 +226,3 @@ function GridPalline() {
   )
 }
 
-export default GridPalline;
