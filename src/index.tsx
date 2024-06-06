@@ -4,6 +4,12 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
+import axios from 'axios';
+//Change default axios
+axios.defaults.baseURL=
+    process.env.NODE_ENV !== 'production' ? 'http://localhost:5000':'/';
+
+
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );

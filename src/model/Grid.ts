@@ -1,6 +1,8 @@
+import { Node } from "./Node";
+
 export class Grid{
-    private static readonly width = 64;
-    private static readonly heigth = 20;
+    static readonly width = 75;
+    static readonly heigth = 18;
     static  START_NODE_ROW = 10;
     static  START_NODE_COL = 15;
     static  FINISH_NODE_ROW = 10;
@@ -16,14 +18,18 @@ export class Grid{
             this.width = _width;
         if(_heigth)
             this.heigth=_heigth;
-        for(let i=0;i<this.heigth;i++){
-            // this.matrix[i] = Array(this.width).fill('');
-            let currentRow:Node[]= [];
-            for(let j=0;j<this.width;j++){
-                currentRow.push(new Node(i,j));
+
+
+            for(let i=0;i<this.heigth;i++){
+                this.matrix[i] = Array(this.width).fill('');
+                let currentRow:Node[]= [];
+                for(let j=0;j<this.width;j++){
+                    let a = new Node(i,j);
+                    currentRow.push(a);
+                }
+                this.nodes.push(currentRow);
             }
-            this.nodes.push(currentRow);
-        }
+
     }
     get matrix():string[][]{
         let matrixString:string[][] = [];
@@ -36,22 +42,12 @@ export class Grid{
         }
         return matrixString;
     }
-}
-export class Node{
-    
-    row: number;
-    col: number;
-
-    constructor(private _row:number,private _col:number){
-        this.row = _row;
-        this.col = _col;
+    resetNodes(){
+        for(let nodeRow of this.nodes){
+            for(let node of nodeRow){
+                node.setDefaultParam();
+            }
+        }
     }
-    
-    value:string = '';
-    isStart:boolean = this._row === Grid.START_NODE_ROW && this._col === Grid.START_NODE_COL;
-    isFinish:boolean = this._row === Grid.FINISH_NODE_ROW && this._col === Grid.FINISH_NODE_COL;
-    distance:number=Infinity;
-    isVisited:boolean= false;
-    isWall:boolean = false; 
-    previousNode!:Node; //undefined default
 }
+

@@ -1,9 +1,8 @@
-import { Node } from "../model/Grid";
+import { Node } from "../model/Node";
 
 export class Dijkstra{
 
     dijkstra(grid:Node[][],startNode:Node,finishNode:Node){
-
         const visitedNodes:Node[] = [];
         startNode.distance = 0;
         const unvisitedNode = this.getRemainingNodes(grid);

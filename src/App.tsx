@@ -1,11 +1,12 @@
 import React from 'react';
 import './App.css';
-import GridPalline from './Visualizer/GridPalline';
-
+// import GridPalline from './Visualizer/GridPalline';
+import LoadingScreen from './Loading/LoadingScreen'
 function App() {
   return (
     <div className='App'>
-      <GridPalline></GridPalline>
+      {/* <GridPalline></GridPalline> */}
+      <LoadingScreen/>
     </div>
   );
 }
