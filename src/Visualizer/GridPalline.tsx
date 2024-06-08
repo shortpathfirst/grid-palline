@@ -18,8 +18,11 @@ import { RecursiveMaze, orientation } from '../Algorithm/RecursiveMaze';
 import { FloodFillAlgorithm } from '../Algorithm/FloodFillAlgorithm';
 import ActionButton from './Partials/ActionButton';
 //Services
-import { getRandomImage } from "../Service/imgService";
+import { fetchRandomImage } from "../Service/imgService";
 import { HiMenuAlt2 } from "react-icons/hi";
+import RandomImageButton from '../_unusedComponents/RandomImageButton';
+
+
 // import SideBarTools from '../Components/SideBarTools/SideBarTools';
 
 // const styles = {
@@ -33,11 +36,12 @@ import { HiMenuAlt2 } from "react-icons/hi";
 //   };//use with styles.menuIcon
 
 let operations:Operation[] = [];
+
 const enum grid{
     draw=-1,
     start=0,
     finish=1,
-    fill=2,
+    //fill
     //eraser
     //setwall
 }
@@ -58,20 +62,23 @@ export default function GridPalline() {
     const [gridState,setGridState] = useState(grid.draw);              //Maze start & finish
     const [draw,setDraw] = useState(false);                         //Activate pen
     const [eraser,setEraser] = useState(false);                     //Eraser
-                    //FloodFill state
+    const [fill,setFill] = useState(false);                         //FloodFill state
 
     const [color, setColor] = useColor("#561ecb");                  //Palette
     const [colorStory,setColorStory] = useState<IColor[]>([]);      //List of color used
+
     const [collapsed, setCollapsed] = useState(true);               //Sidebar state
     const [collapsed2, setCollapsed2] = useState(false);             //Sidebar state RIGHT SIDE
-    const [currentImg,setCurrentImg] = useState<string[][]>([[]])
     const [fixSidebar,setfixSidebar] = useState(false);
+
+    const [currentImg,setCurrentImg] = useState<string[][]>([[]])
+
     useEffect(() => {
         window.addEventListener('mouseup', ()=>{setDraw(false);}, false);  //setEraser(false) ???????
     },[currentImg])//add listener 1 time only
 
     function getRandomImg(){
-        getRandomImage().then(img => {
+        fetchRandomImage().then(img => {
             setCurrentImg(img.data);
             loadImg(img.data);
          });
@@ -139,6 +146,7 @@ export default function GridPalline() {
                 j:jClicked,
                 color:eraser?'':color.hex,
                 prevColor:matrix[iClicked][jClicked].value});
+
             let value:string = eraser?'':color.hex;
             let isWall:boolean = (matrix[iClicked][jClicked].value===color.hex || !eraser)&& isSetWall;
             changeMatrix(iClicked,jClicked,value,isWall);
@@ -158,7 +166,7 @@ export default function GridPalline() {
         changeMatrix(i,j,'',false)
     }
     function handleClick(e:any,i:number,j:number){
-        if(gridState===grid.fill){
+        if(fill){
             let alg = new FloodFillAlgorithm();
             let [filledMatrix,oper] = alg.bfs(matrix.length,matrix[0].length,[...matrix],i,j,color.hex,isSetWall);
             operations = operations.concat(oper);//CONCAT OPERATION FILL THAT CONTAIN LIST OF OPERATIONS
@@ -205,6 +213,8 @@ export default function GridPalline() {
         changeMatrix(i,j,value,isWall);
 
     }
+
+
     const pushColor = (color:IColor) =>{
         if(colorStory.indexOf(color) === -1) {
             // setColorStory([...colorStory,color]);
@@ -329,10 +339,7 @@ export default function GridPalline() {
         setMatrix(copy);
     }
     function floodFill(){
-        if(gridState===grid.fill)
-           setGridState(grid.draw);
-        else 
-            setGridState(grid.fill)
+        setFill(!fill);
     }
     function rotate(){
         let newMatrix:Node[][]= []
@@ -357,8 +364,6 @@ export default function GridPalline() {
             loadImg(currentImg);
     
     }
-    
-
 
 
   return (
@@ -444,7 +449,7 @@ export default function GridPalline() {
                     ROTATE
                 </button>
                 <ActionButton name={"RandomImage"} onAction={()=>getRandomImg()} isActive={false}></ActionButton>
-    
+                {/* <RandomImageButton setMatrix={setMatrix} setColorStory={setColorStory}></RandomImageButton> */}
                 <ActionButton name={"Eraser"} onAction={()=>setEraser(!eraser)} isActive={eraser}></ActionButton>
                 </main>
             )}
@@ -497,9 +502,6 @@ export default function GridPalline() {
                 }
             </div>
         }
-        
-        
-
        
         <div style={{ display: "flex", height: "100vh" }}>
         <Sidebar className="app2"  

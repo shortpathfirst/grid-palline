@@ -1,5 +1,6 @@
-import { Grid } from "../model/Grid";
+import { Operation } from "../model/Operation";
 
 export interface OperationOnGrid{
-    elaborate(grid:Grid):Grid;
+    addOperation(operation:Operation):void;
+    undoOperation():void;
 }
