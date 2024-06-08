@@ -20,7 +20,9 @@ import ActionButton from './Partials/ActionButton';
 //Services
 import { fetchRandomImage } from "../Service/imgService";
 import { HiMenuAlt2 } from "react-icons/hi";
-import RandomImageButton from '../_unusedComponents/RandomImageButton';
+import {rotate,loadImg,countColors} from '../gridController/imgUtils' 
+import ColorStory from '../Components/ColorStory/ColorStory';
+// import MazeGame from './Partials/MazeGame';
 
 
 // import SideBarTools from '../Components/SideBarTools/SideBarTools';
@@ -41,8 +43,8 @@ const enum grid{
     draw=-1,
     start=0,
     finish=1,
-    //fill
-    //eraser
+    fill=2,
+    eraser=3
     //setwall
 }
 const dijkstraPoints ={
@@ -55,14 +57,11 @@ const dijkstraPoints ={
 export default function GridPalline() {
 
     const [matrix,setMatrix] = useState(Grid.createNodes(50,18));   //Grid matrix
-    
-    //USE REDUCER
+
     const [dijkstra,setPoints] = useState(dijkstraPoints);
     const [isSetWall,setWalls] = useState(false);
-    const [gridState,setGridState] = useState(grid.draw);              //Maze start & finish
+    const [gridState,setGridState] = useState(grid.draw);              //Maze start & finish //USE REDUCER//USE REDUCER//USE REDUCER//USE REDUCER
     const [draw,setDraw] = useState(false);                         //Activate pen
-    const [eraser,setEraser] = useState(false);                     //Eraser
-    const [fill,setFill] = useState(false);                         //FloodFill state
 
     const [color, setColor] = useColor("#561ecb");                  //Palette
     const [colorStory,setColorStory] = useState<IColor[]>([]);      //List of color used
@@ -80,44 +79,11 @@ export default function GridPalline() {
     function getRandomImg(){
         fetchRandomImage().then(img => {
             setCurrentImg(img.data);
-            loadImg(img.data);
+            setColorStory(countColors(img.data));
+            setMatrix(loadImg(img.data));
          });
     }
-    const loadImg = (img:string[][])=>{
-        let newMatrix:Node[][]= []
-        // let width = matrix[0].length > img.data[0].length ? matrix[0].length : img.data[0].length;
-        // let heigth = matrix.length > img.data.length ? matrix.length : img.data.length ;
-        let width = img[0].length;
-        let heigth = img.length;
-        for(let i=0;i<heigth;i++){
-            let currentRow:Node[]= [];
-            for(let j=0;j<width;j++){
-                let a = new Node(i,j);
-                if(i<img.length&&j<img[0].length)
-                    a.value = img[i][j];
-                currentRow.push(a);
-            }
-            newMatrix.push(currentRow);
-        }
-        countColors(img);
-        setMatrix(newMatrix);
-    }
-    function countColors(img:string[][]){
-        let rgbs = new Set<string>();
-        for(let i=0; i<img.length;i++){
-            for(let j=0; j<img[0].length; j++)
-            rgbs.add( img[i][j]);   
-        }
-        let colorList:IColor[] = [];
-        for(let value of Array.from(rgbs)){
-            var convert = require('color-convert');
-            let rgb = convert.hex.rgb(value);
-            let hsv = convert.hex.hsv(value);
 
-            colorList.push({hex:value,rgb:{r:rgb[0],g:rgb[1],b:rgb[2],a:1},hsv:{h:hsv[0],s:hsv[1],v:hsv[2],a:1}});
-        }
-        setColorStory(colorList);
-    }
     function changeMatrix(iIndex:number,jIndex:number,value?:string,isWall?:boolean,isVisited?:boolean,previousNode?:Node){
         let copy = matrix.map((row,i)=>{
             row.map((n,j)=>{
@@ -144,11 +110,11 @@ export default function GridPalline() {
             operations.push({
                 i:iClicked, 
                 j:jClicked,
-                color:eraser?'':color.hex,
+                color:gridState === grid.eraser?'':color.hex,
                 prevColor:matrix[iClicked][jClicked].value});
 
-            let value:string = eraser?'':color.hex;
-            let isWall:boolean = (matrix[iClicked][jClicked].value===color.hex || !eraser)&& isSetWall;
+            let value:string = gridState === grid.eraser?'':color.hex;
+            let isWall:boolean = (matrix[iClicked][jClicked].value===color.hex || gridState === grid.draw)&& isSetWall;
             changeMatrix(iClicked,jClicked,value,isWall);
         }   
     }
@@ -166,7 +132,7 @@ export default function GridPalline() {
         changeMatrix(i,j,'',false)
     }
     function handleClick(e:any,i:number,j:number){
-        if(fill){
+        if(gridState===grid.fill){
             let alg = new FloodFillAlgorithm();
             let [filledMatrix,oper] = alg.bfs(matrix.length,matrix[0].length,[...matrix],i,j,color.hex,isSetWall);
             operations = operations.concat(oper);//CONCAT OPERATION FILL THAT CONTAIN LIST OF OPERATIONS
@@ -179,7 +145,7 @@ export default function GridPalline() {
             return;
         }
         if(e.button === 2){ //if Eraser
-             setEraser(true);
+            setGridState(grid.eraser);
         }
         if(gridState === grid.start){
             operations.push({i:i,j:j,color:"start",prevColor:matrix[i][j].value});
@@ -205,11 +171,11 @@ export default function GridPalline() {
         }
         setDraw(true);
 
-        if(!eraser) pushColor(color);
+        if(gridState === grid.draw) pushColor(color);
 
-        operations.push({i:i,j:j,color:eraser?'':color.hex,prevColor:matrix[i][j].value});
-        let value = eraser?'':color.hex;
-        let isWall = !eraser && isSetWall;
+        operations.push({i:i,j:j,color:gridState === grid.eraser?'':color.hex,prevColor:matrix[i][j].value});
+        let value = gridState === grid.eraser?'':color.hex;
+        let isWall = gridState === grid.draw && isSetWall;
         changeMatrix(i,j,value,isWall);
 
     }
@@ -251,6 +217,7 @@ export default function GridPalline() {
         setMatrix(Grid.createNodes(75,18));
         operations=[];
     }
+    
     function animateDijkstra(visitedNodes:Node[],nodesInshortestPath:Node[]){
         for (let i = 0; i < visitedNodes.length; i++) {
             if (i === visitedNodes.length-1) { //Wait animation
@@ -338,33 +305,28 @@ export default function GridPalline() {
         }
         setMatrix(copy);
     }
-    function floodFill(){
-        setFill(!fill);
-    }
-    function rotate(){
-        let newMatrix:Node[][]= []
+    function rotateImage(){
         if(currentImg.length>1 && matrix.length === currentImg.length){
-        
-            let heigth = currentImg[0].length;
-            let width = currentImg.length ;     
-                
-            for(let i=0;i<heigth;i++){
-                let currentRow:Node[]= [];
-                for(let j=0;j<width;j++){
-                    let a = new Node(i,j);
-                    a.value = currentImg[currentImg.length-1-j][i];
-                    currentRow.push(a);
-                }
-                newMatrix.push(currentRow);
-            }
-            setMatrix(newMatrix);
+            setMatrix(rotate(currentImg));
             return;
         }
         if(currentImg.length>1)
             loadImg(currentImg);
-    
     }
-
+    function floodFill(){
+        if(gridState === grid.fill)
+            setGridState(grid.draw)
+        else
+            setGridState(grid.fill)
+    }
+    function switchEraser(){
+        if(gridState === grid.eraser){
+            setGridState(grid.draw)
+        }
+        else{
+            setGridState(grid.eraser)
+        }
+    }
 
   return (
     <>
@@ -424,13 +386,14 @@ export default function GridPalline() {
               </MenuItem>
                 <SubMenu><MenuItem>One</MenuItem></SubMenu>
                 <ActionButton name={"Maze game"} onAction={()=>visualizeDijkstra()} isActive={false}></ActionButton>
+                {/* <MazeGame matrix={matrix} dijkstraPoints={dijkstraPoints} changeMatrix={changeMatrix}></MazeGame> */}
                 <ActionButton name={"Set Start and finish"} onAction={()=>setGridState(gridState===-1?grid.start:grid.draw)} isActive={false}></ActionButton>
                 <ActionButton name={"Set Walls"} onAction={()=>setWalls(!isSetWall)} isActive={false}></ActionButton>
                 <ActionButton name={"MAZE"} onAction={()=>visualizeMaze()} isActive={false}></ActionButton>
-                <ActionButton name={"FloodFill"} onAction={()=>floodFill()} isActive={false}></ActionButton>
+                <ActionButton name={"FloodFill"} onAction={()=> floodFill()} isActive={false}></ActionButton>
                 <button className='backButton'onClick={()=>handlePrevState()}>Cancel</button>
                 {/* <Eraser onClick={()=>setEraser(!eraser)} width={80} height={80} style={{opacity:eraser?0.4:1}}/> */}
-                <img src={logo} alt='Eraser' onClick={()=>setEraser(!eraser)} width={80} height={80} style={{opacity:eraser?0.4:1}}/>
+                <img src={logo} alt='Eraser' onClick={()=>switchEraser()} width={80} height={80} style={{opacity:gridState ===grid.eraser?0.4:1}}/>
                 <button className='backButton'onClick={()=>handleClear()}>Clear</button>
     
                 <button className='backButton' onClick={() => addLine()}>
@@ -445,12 +408,12 @@ export default function GridPalline() {
                 <button className='backButton' onClick={() => removeColumn()}>
                     -1 C
                 </button>
-                <button className='backButton' onClick={() => rotate()}>
+                <button className='backButton' onClick={() => rotateImage()}>
                     ROTATE
                 </button>
                 <ActionButton name={"RandomImage"} onAction={()=>getRandomImg()} isActive={false}></ActionButton>
                 {/* <RandomImageButton setMatrix={setMatrix} setColorStory={setColorStory}></RandomImageButton> */}
-                <ActionButton name={"Eraser"} onAction={()=>setEraser(!eraser)} isActive={eraser}></ActionButton>
+                <ActionButton name={"Eraser"} onAction={()=>switchEraser()} isActive={gridState === grid.eraser}></ActionButton>
                 </main>
             )}
 
@@ -462,21 +425,8 @@ export default function GridPalline() {
 
     </div>
     </div>
-        <div className='prevColorBox'>
-        {
-            colorStory.map((el)=>{
-                return <div key={`div ${el.hex}`} className='prevColor'><button className='colorBox' 
-                key={`color ${el.hex}`}
-                onClick={()=>setColor(el)} 
-                onContextMenu={(e)=>{
-                    e.preventDefault();
-                    setColorStory(colorStory.filter(item => item !== el));
-                }}
-                style={{backgroundColor:el.hex}}>
-                </button >{el.hex}</div>
-            })
-        }
-        </div>
+
+        <ColorStory colorStory={colorStory} setColorStory={setColorStory} setColor={setColor}></ColorStory>
         {
             <div className='grid'>
                 {   
@@ -501,6 +451,7 @@ export default function GridPalline() {
                     })
                 }
             </div>
+
         }
        
         <div style={{ display: "flex", height: "100vh" }}>
