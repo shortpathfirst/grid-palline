@@ -13,19 +13,20 @@ export default class Pallina extends Component {
       onMouseEnter,
       onPointerUp,
       color,
+      opacity,
     } = this.props;
     
     return (
-      <button  className="pallina" 
+      <div className="pallina" 
         key={`node-${row}-${col}`}
         // onClick={()=>{handleClick(i,j);}} 
         onContextMenu={onContextMenu} 
         onMouseEnter={onMouseEnter} 
         onPointerDown={onPointerDown} 
         onPointerUp={onPointerUp} 
-        style={{ backgroundColor:color}}>
+        style={{ backgroundColor:color?color:'white', opacity:opacity}}>
       
-    </button>
+    </div>
     )
   }
 }

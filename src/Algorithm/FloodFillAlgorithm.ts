@@ -17,7 +17,7 @@ export class FloodFillAlgorithm{
     }
      
     // Function to run bfs
-    bfs(n:number, m:number, data:Node[][], X:number, Y:number, color:string):[Node[][],Operation[]]
+    bfs(n:number, m:number, data:Node[][], X:number, Y:number, color:string,walls:boolean):[Node[][],Operation[]]
     {
         for(let nodeRow of data){
             for(let node of nodeRow){
@@ -45,6 +45,9 @@ export class FloodFillAlgorithm{
             let preColor = data[x][y].value;
         
             data[x][y].value = color;
+            if(walls){
+                data[x][y].isWall = true;
+            }
             operations.push({i:x,j:y,color:"fill",prevColor:preColor});
             // Popping front pair of queue
             obj.shift();

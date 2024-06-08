@@ -21,7 +21,7 @@
     all: unset;
     cursor: pointer;
     position: relative;
-    
+    width: 20rem;
   }
   .playme div {
     background-color: rgb(255, 70, 85);

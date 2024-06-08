@@ -2,12 +2,14 @@
     display: flex;
     flex-direction: row;
     align-items:start;
-    width: 100%;
     height: 100vh;
+    position: relative;
 }
 .pallina{
-    width: 1rem;
-    height: 2rem;
+    width: 0.8rem;
+    height: 1.6rem;
+    /* min-width: 1rem;
+    min-height: 2rem; */
     border: solid;
     border-color: rgba(0, 0, 0, 0.281);
     border-radius: 9px;
@@ -19,7 +21,6 @@
     border-image-slice: 200;
     white-space: nowrap;
     margin-top: 5rem;
-    
 }
 .rows{
     display: flex;
@@ -27,7 +28,7 @@
 }
 .colorPicker{
     flex-shrink: 0;
-    margin-top: 10rem;
+    transform: translateY(50%);
     margin-left: 2rem;
     width: 30rem;
 }
@@ -48,6 +49,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    margin-left: 70px;
     min-width: 8rem;
     max-height: 100%;
     margin-right: 2rem;
@@ -61,6 +63,9 @@
     font-size: 1.4rem;
     font-style: italic;
 }
+
+
+
 .backButton{
     width: 5rem;
     font-size: 1.2rem;
@@ -73,9 +78,4 @@
 }
 .backButton:hover{
     opacity: 0.8;
-}
-.actionButtons{
-    display: flex;
-    justify-content: space-around;
-    margin-top: 1rem;
 }

@@ -5,6 +5,8 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 
 import axios from 'axios';
+import { LoadingProvider } from './hooks/useLoading';
+
 //Change default axios
 axios.defaults.baseURL=
     process.env.NODE_ENV !== 'production' ? 'http://localhost:5000':'/';
@@ -15,7 +17,9 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <React.StrictMode>
-    <App />
+    <LoadingProvider>
+      <App />
+    </LoadingProvider>
   </React.StrictMode>
 );
 
