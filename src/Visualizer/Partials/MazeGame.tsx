@@ -2,8 +2,6 @@ import React from 'react'
 import { Node } from '../../model/Node';
 import { Operation } from '../../model/Operation';
 import { Dijkstra } from '../../Algorithm/Dijkstra';
-import { RecursiveMaze,orientation } from '../../Algorithm/RecursiveMaze';
-import ActionButton from './ActionButton';
 
 let operations:Operation[] = []; //MAKE IT HANDLER PUSH OPERATION
 
@@ -69,8 +67,8 @@ function MazeGame({matrix,changeMatrix,dijkstraPoints}:{matrix:Node[][],changeMa
     //     // setMatrix(copy);
     // }
 
-  return (
-    <ActionButton name={"Maze game"} onAction={()=>visualizeDijkstra()} isActive={false}></ActionButton>
+  return (<></>
+    // <ActionButton name={"Maze game"} onAction={()=>visualizeDijkstra()} isActive={false}></ActionButton>
   )
 }
 

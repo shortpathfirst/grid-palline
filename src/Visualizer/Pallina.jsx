@@ -19,7 +19,6 @@ export default class Pallina extends Component {
     return (
       <div className="pallina" 
         key={`node-${row}-${col}`}
-        // onClick={()=>{handleClick(i,j);}} 
         onContextMenu={onContextMenu} 
         onMouseEnter={onMouseEnter} 
         onPointerDown={onPointerDown} 

@@ -1,6 +1,23 @@
 import { IColor } from "react-color-palette";
 import { Node } from "../model/Node";
+    export function rotateMatrix(matrix:Node[][]):Node[][]{
+        let newMatrix:Node[][]= []
+        let heigth = matrix[0].length;
+        let width = matrix.length ;     
+                
+        for(let i=0;i<heigth;i++){
+            let currentRow:Node[]= [];
+            for(let j=0;j<width;j++){
+                let a = new Node(i,j);
+                a.value = matrix[matrix.length-1-j][i].value;
+                currentRow.push(a);
+            }
+            newMatrix.push(currentRow);
+        }
+        
+        return newMatrix;
 
+    }
     export function rotate(currentImg:string[][]):Node[][]{
         let newMatrix:Node[][]= []
         let heigth = currentImg[0].length;

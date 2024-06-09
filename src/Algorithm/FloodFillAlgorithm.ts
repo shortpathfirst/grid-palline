@@ -1,4 +1,3 @@
-import { Grid } from "../model/Grid";
 import { Node } from "../model/Node";
 import { Operation } from "../model/Operation";
 export class FloodFillAlgorithm{
@@ -53,36 +52,36 @@ export class FloodFillAlgorithm{
             obj.shift();
         
             // For Upside Pixel or Cell
-            if (this.validCoord(x + 1, y, n, m) == 1
-                && data[x+1][y].isVisited == false
-                && data[x + 1][y].value == preColor)
+            if (this.validCoord(x + 1, y, n, m) === 1
+                && data[x+1][y].isVisited === false
+                && data[x + 1][y].value === preColor)
             {
             obj.push([x + 1, y]);
             data[x + 1][y].isVisited = true;
             }
             
             // For Downside Pixel or Cell
-            if (this.validCoord(x - 1, y, n, m) == 1
-                && data[x - 1][y].isVisited == false
-                && data[x - 1][y].value == preColor)
+            if (this.validCoord(x - 1, y, n, m) === 1
+                && data[x - 1][y].isVisited === false
+                && data[x - 1][y].value === preColor)
             {
             obj.push([x - 1, y]);
             data[x - 1][y].isVisited = true;
             }
             
             // For Right side Pixel or Cell
-            if (this.validCoord(x, y + 1, n, m) == 1
-                && data[x][y + 1].isVisited == false
-                && data[x][y + 1].value == preColor)
+            if (this.validCoord(x, y + 1, n, m) === 1
+                && data[x][y + 1].isVisited === false
+                && data[x][y + 1].value === preColor)
             {
             obj.push([x, y + 1]);
             data[x][y + 1].isVisited = true;
             }
             
             // For Left side Pixel or Cell
-            if (this.validCoord(x, y - 1, n, m) == 1
-                && data[x][y - 1].isVisited == false
-                && data[x][y - 1].value == preColor)
+            if (this.validCoord(x, y - 1, n, m) === 1
+                && data[x][y - 1].isVisited === false
+                && data[x][y - 1].value === preColor)
             {
             obj.push([x, y - 1]);
             data[x][y - 1].isVisited = true;

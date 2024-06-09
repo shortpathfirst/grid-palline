@@ -9,8 +9,6 @@ export class Grid{
     static  START_NODE_COL = 15;
     static  FINISH_NODE_ROW = 10;
     static  FINISH_NODE_COL = 25; 
-
-    constructor(){}
     
     static createNodes(_width?:number,_heigth?:number):Node[][]{
         if(!_width)

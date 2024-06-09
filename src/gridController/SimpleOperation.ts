@@ -4,13 +4,14 @@ import { OperationOnGrid } from "./OperationOnGrid";
 
 export class SimpleOperation implements OperationOnGrid{
 
-    operation!:Operation;
-
+    // operation!:Operation;
+    constructor(private operation:Operation){}
+    
     addOperation(operation:Operation): void {
-        this.operation = operation
+
     }
-    undoOperation(): void {
-        throw new Error("Method not implemented.");
+    undoOperation(): Operation[] {
+        return [this.operation];
     }
     
 }

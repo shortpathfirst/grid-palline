@@ -1,31 +1,22 @@
-import React, {useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import './Grid.css'
 //  Palette
-import { ColorPicker, IColor, useColor } from "react-color-palette";
+import { IColor, useColor } from "react-color-palette";
 import "react-color-palette/css";
-//SideBar
-import { Sidebar, Menu, MenuItem, SubMenu } from 'react-pro-sidebar';
-//Svgs
-// import { ReactComponent as Eraser } from '../Assets/Eraser_icon.svg';
-import  logo from '../Assets/Eraser_icon.svg';
-//
-import Pallina from './Pallina';
-import { Operation } from '../model/Operation';
 import { Grid } from '../model/Grid';
 import { Node } from '../model/Node';
 import { Dijkstra } from '../Algorithm/Dijkstra';
-import { RecursiveMaze, orientation } from '../Algorithm/RecursiveMaze';
-import { FloodFillAlgorithm } from '../Algorithm/FloodFillAlgorithm';
-import ActionButton from './Partials/ActionButton';
-//Services
 import { fetchRandomImage } from "../Service/imgService";
-import { HiMenuAlt2 } from "react-icons/hi";
-import {rotate,loadImg,countColors} from '../gridController/imgUtils' 
+import {loadImg,countColors, rotateMatrix} from '../gridController/imgUtils' 
 import ColorStory from '../Components/ColorStory/ColorStory';
+import { grid } from '../model/GridStatus';
+import GridComponent from './GridComponent';
+import RightSideBar from './Partials/SideBarTools/RightSideBar';
+import LeftSideBar from './Partials/SideBarTools/LeftSideBar';
+import { OperationOnGrid } from '../gridController/OperationOnGrid';
+import { dijkstraOperation } from '../gridController/dijkstraOperation';
+
 // import MazeGame from './Partials/MazeGame';
-
-
-// import SideBarTools from '../Components/SideBarTools/SideBarTools';
 
 // const styles = {
 //     sideBarHeight: {
@@ -37,16 +28,8 @@ import ColorStory from '../Components/ColorStory/ColorStory';
 //     }
 //   };//use with styles.menuIcon
 
-let operations:Operation[] = [];
+let operationList:OperationOnGrid[] = [];
 
-const enum grid{
-    draw=-1,
-    start=0,
-    finish=1,
-    fill=2,
-    eraser=3
-    //setwall
-}
 const dijkstraPoints ={
     START_NODE_ROW : 10,
     START_NODE_COL : 15, //TO CHECK IN MATRIX
@@ -56,24 +39,21 @@ const dijkstraPoints ={
 
 export default function GridPalline() {
 
-    const [matrix,setMatrix] = useState(Grid.createNodes(50,18));   //Grid matrix
+    const [matrix,setMatrix] = useState(Grid.createNodes(50,18));            //Grid matrix
 
     const [dijkstra,setPoints] = useState(dijkstraPoints);
     const [isSetWall,setWalls] = useState(false);
-    const [gridState,setGridState] = useState(grid.draw);              //Maze start & finish //USE REDUCER//USE REDUCER//USE REDUCER//USE REDUCER
-    const [draw,setDraw] = useState(false);                         //Activate pen
+    const [gridState,setGridState] = useState(grid.draw);                   //Grid state //USE REDUCER//USE REDUCER//USE REDUCER//USE REDUCER
 
-    const [color, setColor] = useColor("#561ecb");                  //Palette
-    const [colorStory,setColorStory] = useState<IColor[]>([]);      //List of color used
+    const [color, setColor] = useColor("#561ecb");                          //Palette
+    const [colorStory,setColorStory] = useState<IColor[]>([]);              //List of color used
 
-    const [collapsed, setCollapsed] = useState(true);               //Sidebar state
-    const [collapsed2, setCollapsed2] = useState(false);             //Sidebar state RIGHT SIDE
-    const [fixSidebar,setfixSidebar] = useState(false);
+    const [rightSidebarCollapsed, setRightCollapsed] = useState(true);      //Right Sidebar state
+    const [fixRightSidebar,setfixRightSidebar] = useState(false);
 
     const [currentImg,setCurrentImg] = useState<string[][]>([[]])
 
     useEffect(() => {
-        window.addEventListener('mouseup', ()=>{setDraw(false);}, false);  //setEraser(false) ???????
     },[currentImg])//add listener 1 time only
 
     function getRandomImg(){
@@ -84,7 +64,7 @@ export default function GridPalline() {
          });
     }
 
-    function changeMatrix(iIndex:number,jIndex:number,value?:string,isWall?:boolean,isVisited?:boolean,previousNode?:Node){
+    function changeMatrix(iIndex:number,jIndex:number,value?:string,isWall?:boolean){
         let copy = matrix.map((row,i)=>{
             row.map((n,j)=>{
                 if(iIndex===i && jIndex===j){
@@ -92,10 +72,6 @@ export default function GridPalline() {
                         matrix[i][j].value=value;
                     if(!!isWall)
                         matrix[i][j].isWall=isWall;
-                    if(!!isVisited)
-                        matrix[i][j].isVisited=isVisited;
-                    if(previousNode)
-                        matrix[i][j].previousNode=previousNode;
 
                     return  matrix[i][j]; // need to make a copy of the node
                 }
@@ -105,150 +81,95 @@ export default function GridPalline() {
         })
         setMatrix(copy);
     }
-    function handleHover(iClicked:number,jClicked:number){
-        if(draw){
-            operations.push({
-                i:iClicked, 
-                j:jClicked,
-                color:gridState === grid.eraser?'':color.hex,
-                prevColor:matrix[iClicked][jClicked].value});
-
-            let value:string = gridState === grid.eraser?'':color.hex;
-            let isWall:boolean = (matrix[iClicked][jClicked].value===color.hex || gridState === grid.draw)&& isSetWall;
-            changeMatrix(iClicked,jClicked,value,isWall);
-        }   
+    function resetParams(){
+        let copy = matrix.map((row,i)=>{
+            row.map((n,j)=>{
+                matrix[i][j].isVisited=false;
+                matrix[i][j].distance = Infinity;
+                //@ts-ignore
+                matrix[i][j].previousNode=undefined; //setting undefined
+                matrix[i][j].isStart = false;
+                matrix[i][j].isFinish = false;
+                return  matrix[i][j];
+            })
+            return row;
+        });
+            setMatrix(copy);
     }
-
-    function handleRight(e:Event,i:number,j:number){
-        e.preventDefault();
-        setDraw(false);
-
-        operations.push({
-            i:i,
-            j:j,
-            color:'',
-            prevColor:matrix[i][j].value});
-
-        changeMatrix(i,j,'',false)
-    }
-    function handleClick(e:any,i:number,j:number){
-        if(gridState===grid.fill){
-            let alg = new FloodFillAlgorithm();
-            let [filledMatrix,oper] = alg.bfs(matrix.length,matrix[0].length,[...matrix],i,j,color.hex,isSetWall);
-            operations = operations.concat(oper);//CONCAT OPERATION FILL THAT CONTAIN LIST OF OPERATIONS
-            pushColor(color);
-            setMatrix(filledMatrix)
-            return;
-        }
-        if(operations.length>0 && operations[operations.length-1].color ==="dijkstra"){ //pop operation untill !=
-            clear("dijkstra");
-            return;
-        }
-        if(e.button === 2){ //if Eraser
-            setGridState(grid.eraser);
-        }
-        if(gridState === grid.start){
-            operations.push({i:i,j:j,color:"start",prevColor:matrix[i][j].value});
-            changeMatrix(i,j,'#01ff00')
-            setPoints({
-                ...dijkstra, 
-                START_NODE_ROW:i,
-                START_NODE_COL: j 
-              });
-            setGridState(grid.finish);
-            return;
-        }
-        if(gridState === grid.finish){
-            operations.push({i:i,j:j,color:"finish",prevColor:matrix[i][j].value});
-            changeMatrix(i,j,'#fe0000')
-            setPoints({
-                ...dijkstra, 
-                FINISH_NODE_ROW:i,
-                FINISH_NODE_COL: j 
-              });
-            setGridState(grid.draw);
-            return;
-        }
-        setDraw(true);
-
-        if(gridState === grid.draw) pushColor(color);
-
-        operations.push({i:i,j:j,color:gridState === grid.eraser?'':color.hex,prevColor:matrix[i][j].value});
-        let value = gridState === grid.eraser?'':color.hex;
-        let isWall = gridState === grid.draw && isSetWall;
-        changeMatrix(i,j,value,isWall);
-
-    }
-
-
     const pushColor = (color:IColor) =>{
-        if(colorStory.indexOf(color) === -1) {
-            // setColorStory([...colorStory,color]);
-            colorStory.push(color);
+        if(colorStory.find((c)=>c.hex===color.hex)){
+            return;
         }
-    }
-    //Clear fill and dijkstra
-    function clear(name:string){ 
-        while(operations.length>0 && operations[operations.length-1].color ===name){
-            let lastoperation:Operation = operations.pop()!;
-            let i = lastoperation.i;
-            let j = lastoperation.j
-            changeMatrix(i,j,lastoperation.prevColor);
-        }
+        setColorStory([...colorStory,color]);
     }
 
+////////////////////////////////////////////////////////
+////////////      operations      //////////////////////
+    function pushOperation(operation:OperationOnGrid){ 
+        operationList.push(operation);
+}
     function handlePrevState(){
         let count=0;
-        while(operations.length>0 && (count <10)){
-            if(operations[operations.length-1].color === 'fill'){
-                clear('fill');
-                continue;
+        while(operationList.length>0 && (count <10)){
+            let lastoperation:OperationOnGrid = operationList.pop()!;
+            let complexOne = lastoperation.undoOperation();
+            if(complexOne.length>1){
+                for(let el of complexOne)
+                    changeMatrix(el.i,el.j,el.prevColor);//MISSING PROPERTIES
+                return;
             }
-            let lastoperation:Operation = operations.pop()!;
-            let i = lastoperation.i;
-            let j = lastoperation.j
-            changeMatrix(i,j,lastoperation.prevColor) //O(10n) with map is O(n)
+            let simpleOne = complexOne[0];
+            let i = simpleOne.i;
+            let j = simpleOne.j
+            changeMatrix(i,j,simpleOne.prevColor) //O(10n) with map is O(n)
             count++;
         }
 
     }
 
     function handleClear(){
-        setMatrix(Grid.createNodes(75,18));
-        operations=[];
+        setMatrix(Grid.createNodes(50,18));
+        operationList=[];
     }
-    
+////////////////////////////////////////////////////////
+////////////     DIJKSTRA         //////////////////////
+
     function animateDijkstra(visitedNodes:Node[],nodesInshortestPath:Node[]){
+        let dijkstraOperationList = new dijkstraOperation();
         for (let i = 0; i < visitedNodes.length; i++) {
             if (i === visitedNodes.length-1) { //Wait animation
                 setTimeout(() => {
                     animateShortestPath(nodesInshortestPath);
                 }, 10 * i);
-                return;
+                break;
             }
             const node = visitedNodes[i];
             setTimeout(() => {
                 changeMatrix(node.row,node.col,"#aee4ac");
             }, 10 * i);
-            operations.push({
+            dijkstraOperationList.addOperation({
                 i:node.row,
                 j:node.col,
                 color:'dijkstra',
                 prevColor:matrix[node.row][node.col].value});
         }
+        operationList.push(dijkstraOperationList);
+        resetParams();
     }
     function animateShortestPath(nodesInshortestPath:Node[]) {
+        let dijkstraOperationList = new dijkstraOperation();
         for (let i = 0; i < nodesInshortestPath.length; i++) {
         const node = nodesInshortestPath[i];
         setTimeout(() => {
             changeMatrix(node.row,node.col,'#cb4d1e')
         }, 50 * i);
-        operations.push({
+        dijkstraOperationList.addOperation({
             i:node.row,
             j:node.col,
             color:'dijkstra',
             prevColor:matrix[node.row][node.col].value});
         }
+        operationList.push(dijkstraOperationList);
     }
     function visualizeDijkstra(){
         const startNode = matrix[dijkstra.START_NODE_ROW][dijkstra.START_NODE_COL];
@@ -256,62 +177,10 @@ export default function GridPalline() {
         const algorithm = new Dijkstra();
         const visitedNodes = algorithm.dijkstra(matrix,startNode,finishNode); //NEED TO RESET THE NODES OF THE MATRIX
         const nodesInshortestPath = algorithm.getNodesInShortestPathOrder(finishNode);
-        clear("dijkstra");
         animateDijkstra(visitedNodes!,nodesInshortestPath); //DO NOT FORCE !
-
     }   
-    /////////////////
-    ///     MAZE
-    /////////////////
-    function visualizeMaze(){
-        // for(let i=0; i<matrix.length; i++){
-        //     for(let j=0; j<matrix[0].length; j++){
-        //         matrix[i][j].setDefaultParam();
-        //     }
-        // }
-        const algorithm = new RecursiveMaze(
-            matrix[dijkstra.START_NODE_ROW][dijkstra.FINISH_NODE_COL],
-            matrix[dijkstra.FINISH_NODE_ROW][dijkstra.FINISH_NODE_COL]);
-        let copy  = [...matrix];
-        algorithm.recursiveDivisionMaze(copy,2,matrix.length-2,2,matrix[0].length-3,orientation.horizontal,false,true)
-        setMatrix(copy);
-    }
-    function addLine(){
-        let newMatrix:Node[]= []
-
-        for(let j=0;j<matrix[0].length;j++){
-            let a = new Node(matrix.length,j);
-            newMatrix.push(a);
-        }
-        setMatrix([...matrix,newMatrix]);
-        // setMatrix(matrix.concat([newMatrix]));
-    }
-    function removeLine(){
-        setMatrix(matrix.slice(0,matrix.length-1))
-    }
-    function addColumn(){
-        let copy  = [...matrix];
-        for(let i=0;i<matrix.length;i++){
-            let a = new Node(i,matrix[0].length);
-            copy[i].push(a);
-        }
-        setMatrix(copy);
-        
-    }
-    function removeColumn(){
-        let copy  = [...matrix];
-        for(let i=0;i<matrix.length;i++){
-            copy[i].pop();
-        }
-        setMatrix(copy);
-    }
     function rotateImage(){
-        if(currentImg.length>1 && matrix.length === currentImg.length){
-            setMatrix(rotate(currentImg));
-            return;
-        }
-        if(currentImg.length>1)
-            loadImg(currentImg);
+        setMatrix(rotateMatrix(matrix));
     }
     function floodFill(){
         if(gridState === grid.fill)
@@ -331,158 +200,50 @@ export default function GridPalline() {
   return (
     <>
     <div className='container' >
-        {/* <SideBarTools
-            onEraser ={()=>setEraser(!eraser)}
+        <LeftSideBar
+            onEraser ={()=>switchEraser()}
+            isEraser={gridState===grid.eraser}
             onRandomImage ={()=>getRandomImg()}
-            onRotate ={() => rotate()}
-            onRemoveColumn ={() => removeColumn()}
-            onAddColumn ={() => addColumn()}
-            onRemoveLine ={() => removeLine()}
-            onAddLine ={() => addLine()}
+            onRotate ={() => rotateImage()}
             onClear ={()=>handleClear()}
+
             onDijkstra ={()=>visualizeDijkstra()}
             onChangeStart ={()=>setGridState(gridState===-1?grid.start:grid.draw)}
             onSetWalls ={()=>setWalls(!isSetWall)}
-            onVisualizeMaze ={()=>visualizeMaze()}
+
             onFloodFill ={()=>floodFill()}
             onPrevState ={()=>handlePrevState()}
-            ></SideBarTools> */}
-    <div style={{ display: "flex", height: "100vh" }}>
-      <Sidebar 
-        className="app"  
-        style={{ height: "100%", position:"fixed" }} 
-        onMouseEnter={()=>setCollapsed(false)}
-        onMouseLeave={()=>setCollapsed(true)}
-        collapsedWidth={"70px"} 
-        collapsed={collapsed}
-        backgroundColor={"rgb(214, 201, 223)"}
-        transitionDuration={200}
-        
-        >
-        <main>
-            <Menu>
-        {collapsed ? (
-              <MenuItem
-                icon={<HiMenuAlt2 className="logo-burger" />}
-                onClick={()=>setCollapsed(!collapsed)}
-              ></MenuItem>
-            ) : (
-                <main style={{display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center"}}>
-              <MenuItem
-                icon={<img src={logo} alt='Eraser' width={80} height={80}/>}
-                suffix={"Hello"}
-                onClick={()=>setCollapsed(!collapsed)}
-              >
-                <div
-                  style={{
-                    padding: "9px",
-                    fontWeight: "bold",
-                    fontSize: 14,
-                    letterSpacing: "1px",
-                  }}
-                >
-
-                </div>
-              </MenuItem>
-                <SubMenu><MenuItem>One</MenuItem></SubMenu>
-                <ActionButton name={"Maze game"} onAction={()=>visualizeDijkstra()} isActive={false}></ActionButton>
-                {/* <MazeGame matrix={matrix} dijkstraPoints={dijkstraPoints} changeMatrix={changeMatrix}></MazeGame> */}
-                <ActionButton name={"Set Start and finish"} onAction={()=>setGridState(gridState===-1?grid.start:grid.draw)} isActive={false}></ActionButton>
-                <ActionButton name={"Set Walls"} onAction={()=>setWalls(!isSetWall)} isActive={false}></ActionButton>
-                <ActionButton name={"MAZE"} onAction={()=>visualizeMaze()} isActive={false}></ActionButton>
-                <ActionButton name={"FloodFill"} onAction={()=> floodFill()} isActive={false}></ActionButton>
-                <button className='backButton'onClick={()=>handlePrevState()}>Cancel</button>
-                {/* <Eraser onClick={()=>setEraser(!eraser)} width={80} height={80} style={{opacity:eraser?0.4:1}}/> */}
-                <img src={logo} alt='Eraser' onClick={()=>switchEraser()} width={80} height={80} style={{opacity:gridState ===grid.eraser?0.4:1}}/>
-                <button className='backButton'onClick={()=>handleClear()}>Clear</button>
-    
-                <button className='backButton' onClick={() => addLine()}>
-                    +1
-                </button>
-                <button className='backButton' onClick={() => removeLine()}>
-                    -1
-                </button>
-                <button className='backButton' onClick={() => addColumn()}>
-                    +1 C
-                </button>
-                <button className='backButton' onClick={() => removeColumn()}>
-                    -1 C
-                </button>
-                <button className='backButton' onClick={() => rotateImage()}>
-                    ROTATE
-                </button>
-                <ActionButton name={"RandomImage"} onAction={()=>getRandomImg()} isActive={false}></ActionButton>
-                {/* <RandomImageButton setMatrix={setMatrix} setColorStory={setColorStory}></RandomImageButton> */}
-                <ActionButton name={"Eraser"} onAction={()=>switchEraser()} isActive={gridState === grid.eraser}></ActionButton>
-                </main>
-            )}
-
-
-        </Menu>
-        </main>
-      </Sidebar>
-    <div className='rightSidebar'>
-
-    </div>
-    </div>
+            matrix={matrix}
+            setMatrix={setMatrix}
+            gridState={gridState}
+            isWall={isSetWall}
+            floodFill={gridState===grid.fill}
+            ></LeftSideBar>
+   
 
         <ColorStory colorStory={colorStory} setColorStory={setColorStory} setColor={setColor}></ColorStory>
-        {
-            <div className='grid'>
-                {   
-                    matrix.map((el,i)=>{
-                            
-                        return <div className='rows' key={`row ${i}`}> {el.map((val,j)=>{
 
-                            return (
-                                <Pallina key={`node-${i}-${j}`}
-                                row={i}
-                                col={j}
-                                onContextMenu={(e:any)=>{handleRight(e,i,j)}} 
-                                onMouseEnter={()=>handleHover(i,j)} 
-                                onPointerDown={(e:any)=>handleClick(e,i,j)} 
-                                onPointerUp={()=>setDraw(false)}
-                                color={(matrix[i][j].value==='')?'':matrix[i][j].value}
-                                opacity={matrix[i][j].isWall || !isSetWall?1:0.4}
-                                />
-                            )
-                        })} 
-                        </div>
-                    })
-                }
-            </div>
+        <GridComponent 
+        matrix={matrix} 
+        gridState={gridState} 
+        setGridState={setGridState} 
+        setMatrix={setMatrix} 
+        pushColor={pushColor} 
+        setPoints={setPoints} 
+        color={color} 
+        dijkstra={dijkstra} 
+        isSetWall={isSetWall}
+        pushComplexOperation={pushOperation}
+        changeMatrix={changeMatrix}
+        />
 
-        }
-       
-        <div style={{ display: "flex", height: "100vh" }}>
-        <Sidebar className="app2"  
-        style={{ height: "100%",position:"fixed",right:"0"} } //marginRight:"0px",marginLeft:"auto",float:"right",
-        collapsed ={collapsed2}
-        collapsedWidth={"20px"} 
-        onMouseEnter={()=>{if(!fixSidebar)setCollapsed2(false)}}
-        onMouseLeave={()=>{if(!fixSidebar)setCollapsed2(true)}}
-        backgroundColor={"rgb(175, 157, 212, 0.235)"}
-        transitionDuration={200} 
-        width='550px'
-        
-          >
-        <Menu>
-        {!collapsed2 ? (
-        <div className='colorPicker'>
-                <ColorPicker color={color} onChange={setColor} />
-                <button className='backButton' onClick={() =>setfixSidebar(!fixSidebar)}>
-                    FIX
-                </button>
-                
-        </div>
-            
-        ):(<MenuItem
-                onClick={()=>setCollapsed2(!collapsed)}
-              ></MenuItem>
-              )}
-            </Menu>
-        </Sidebar>
-        </div>
+        <RightSideBar 
+            collapsed={rightSidebarCollapsed} 
+            color={color} setColor={setColor} 
+            handleMouseEnter={()=>{if(!fixRightSidebar)setRightCollapsed(false)}} 
+            handleMouseLeave={()=>{if(!fixRightSidebar)setRightCollapsed(true)}}
+            onFixSidebar={() =>setfixRightSidebar(!fixRightSidebar)}/>
+
     </div>
     </>
   )

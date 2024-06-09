@@ -8,8 +8,8 @@ export class dijkstraOperation implements OperationOnGrid{
     addOperation(operation:Operation): void {
        this.listDijkstra.push(operation);
     }
-    undoOperation(): void {
-        throw new Error("Method not implemented.");
+    undoOperation(): Operation[]{
+       return this.listDijkstra;
     }
     
 }
