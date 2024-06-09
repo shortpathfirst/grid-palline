@@ -1,7 +1,7 @@
 import React from 'react'
 import Loading from './Loading'
 import { useLoading } from '../../hooks/useLoading'
-import './loading.css'
+import '../../styles/loading.css'
 function LoadingPage() {
     const {isLoading} = useLoading();
     if(!isLoading) return <></>;

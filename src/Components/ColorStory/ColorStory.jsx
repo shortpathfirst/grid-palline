@@ -1,5 +1,5 @@
 import React from 'react'
-import './colorstory.css'
+import '../../styles/colorstory.css'
 function ColorStory({colorStory,setColorStory,setColor}) {
   return (
     <div className='prevColorBox'>

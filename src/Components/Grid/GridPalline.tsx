@@ -1,20 +1,21 @@
 import React, { useEffect, useState } from 'react'
-import './Grid.css'
+import '../../styles/grid.css'
 //  Palette
 import { IColor, useColor } from "react-color-palette";
 import "react-color-palette/css";
-import { Grid } from '../model/Grid';
-import { Node } from '../model/Node';
-import { Dijkstra } from '../Algorithm/Dijkstra';
-import { fetchRandomImage } from "../Service/imgService";
-import {loadImg,countColors, rotateMatrix} from '../gridController/imgUtils' 
-import ColorStory from '../Components/ColorStory/ColorStory';
-import { grid } from '../model/GridStatus';
+import { Grid } from '../../model/Grid';
+import { Node } from '../../model/Node';
+import { Dijkstra } from '../../Algorithm/Dijkstra';
+import { fetchRandomImage } from "../../Service/imgService";
+import {loadImg,countColors, rotateMatrix} from '../../Controller/imgUtils' 
+import ColorStory from '../ColorStory/ColorStory';
+import { grid } from '../../model/GridStatus';
 import GridComponent from './GridComponent';
-import RightSideBar from './Partials/SideBarTools/RightSideBar';
-import LeftSideBar from './Partials/SideBarTools/LeftSideBar';
-import { OperationOnGrid } from '../gridController/OperationOnGrid';
-import { dijkstraOperation } from '../gridController/dijkstraOperation';
+import RightSideBar from '../SideBarTools/RightSideBar';
+import LeftSideBar from '../SideBarTools/LeftSideBar';
+import { OperationOnGrid } from '../../Controller/OperationOnGrid';
+import { dijkstraOperation } from '../../Controller/dijkstraOperation';
+
 
 // import MazeGame from './Partials/MazeGame';
 

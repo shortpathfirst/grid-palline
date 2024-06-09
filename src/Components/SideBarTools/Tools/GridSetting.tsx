@@ -1,6 +1,7 @@
 import React from 'react'
-import '../../gridSetting.css'
-import { Node } from '../../../../model/Node';
+import '../../../styles/gridSetting.css'
+import { Node } from '../../../model/Node';
+
 function GridSetting({matrix,setMatrix}:{matrix:Node[][],setMatrix:Function}) {
 
 

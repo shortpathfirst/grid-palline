@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react'
-import { Operation } from '../model/Operation';
+import { Operation } from '../../model/Operation';
 import { IColor } from 'react-color-palette';
-import { Node } from '../model/Node';
-import { grid } from '../model/GridStatus';
-import { FloodFillAlgorithm } from '../Algorithm/FloodFillAlgorithm';
+import { Node } from '../../model/Node';
+import { grid } from '../../model/GridStatus';
+import { FloodFillAlgorithm } from '../../Algorithm/FloodFillAlgorithm';
 import Pallina from './Pallina';
-import { SimpleOperation } from '../gridController/SimpleOperation';
-import { FloodFillOperation } from '../gridController/FloodFillOperation';
+import { SimpleOperation } from '../../Controller/SimpleOperation';
+import { FloodFillOperation } from '../../Controller/FloodFillOperation';
 
 
 interface GridProps{

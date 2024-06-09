@@ -7,10 +7,11 @@ import { AiOutlineControl } from "react-icons/ai";
 import { MdScreenRotation } from "react-icons/md";
 import { FaUndo } from "react-icons/fa";
 import { BsGrid3X3Gap } from "react-icons/bs";
-import logo from '../../../Assets/Eraser_icon.svg';
+import logo from '../../Assets/Eraser_icon.svg';
 import ClearDialog from './Tools/ClearDialog';
 import GridSetting from './Tools/GridSetting';
 import MazeTools from './Tools/MazeTools';
+
 
 function LeftSideBar({
   onEraser,
@@ -79,6 +80,10 @@ function LeftSideBar({
             <MenuItem onClick={onFloodFill} icon={<GiPaintBucket />} style={setFloodFillStyle}/>
             <MenuItem icon={<FaUndo />} onClick={onPrevState}/>
             <MenuItem onClick={onRotate} icon={<MdScreenRotation />}/>
+            <MenuItem onClick={onEraser} icon={
+              <img src={logo} alt='Eraser'  width={35} height={35} style={{opacity:isEraser?0.4:1}}/>
+            }></MenuItem>
+            
             </main>
           ) : (
               <main style={{display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center"}}>
@@ -99,9 +104,12 @@ function LeftSideBar({
             <ClearDialog onClear = {onClear}></ClearDialog>
 
             <MenuItem onClick={onRotate} icon={<MdScreenRotation />}>ROTATE</MenuItem>
+            <MenuItem onClick={onEraser} icon={
+               <img src={logo} alt='Eraser' width={40} height={40} style={{opacity:isEraser?0.4:1}}/>
+            }>ERASER</MenuItem>
             </SubMenu>
-
-              <img src={logo} alt='Eraser' onClick={onEraser} width={80} height={80} style={{opacity:isEraser?0.4:1}}/>
+            
+             
 
             <SubMenu label={"Grid size"} icon={<BsGrid3X3Gap />}defaultOpen={true}>
               <GridSetting matrix={matrix} setMatrix={setMatrix} onRotate={onRotate} onClear={onClear}/>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import Loading from './Loading';
-import GridPalline from '../../Visualizer/GridPalline';
+import GridPalline from '../Grid/GridPalline';
+import Welcome from './Welcome';
 
 
 function MyComponent() {
@@ -14,7 +14,7 @@ function MyComponent() {
   }, []);
 
   if (isLoading) {
-    return <Loading />;
+    return <Welcome/>
   }
 
   return (

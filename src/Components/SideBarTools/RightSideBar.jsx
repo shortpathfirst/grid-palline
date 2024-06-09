@@ -10,7 +10,7 @@ function RightSideBar({collapsed,color,setColor,handleMouseEnter,handleMouseLeav
       <Sidebar className="app2"  
         style={{ height: "100%",position:"fixed",right:"0"} } //marginRight:"0px",marginLeft:"auto",float:"right",
         collapsed ={collapsed}
-        collapsedWidth={"20px"} 
+        collapsedWidth={"60px"} 
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
         backgroundColor={"rgb(175, 157, 212, 0.235)"}
