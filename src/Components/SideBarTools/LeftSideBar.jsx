@@ -3,15 +3,15 @@ import { Sidebar, Menu, MenuItem, SubMenu } from 'react-pro-sidebar';
 import { HiMenuAlt2} from "react-icons/hi";
 import { SlWrench } from "react-icons/sl";
 import { GiPaintBucket } from "react-icons/gi";
-import { AiOutlineControl } from "react-icons/ai";
 import { MdScreenRotation } from "react-icons/md";
 import { FaUndo } from "react-icons/fa";
 import { BsGrid3X3Gap } from "react-icons/bs";
 import logo from '../../Assets/Eraser_icon.svg';
-import ClearDialog from './Tools/ClearDialog';
 import GridSetting from './Tools/GridSetting';
 import MazeTools from './Tools/MazeTools';
-
+import '../../styles/leftSidebar.css';
+import {arrayToImg} from '../../Controller/imgUtils' 
+import ControlTools from './Tools/ControllTools/ControlTools';
 
 function LeftSideBar({
   onEraser,
@@ -32,19 +32,30 @@ function LeftSideBar({
 }) {
 
     const [collapsed, setCollapsed] = useState(false);               //Sidebar state
+    function download(){
+        arrayToImg(matrix);
+    }
 
-
-    const setFloodFillStyle = floodFill?{backgroundColor:"#9f8dc6"}:{}
+    const floodFillStyle = floodFill?{backgroundColor:"#9f8dc6"}:{};
 
     const rndImageStyle = {
       background:"conic-gradient(from 45deg,red,yellow,lime,aqua,blue,magenta,red)",
       fontSize:"1.4rem",
       fontWeight:"bolder",
       marginTop:"2rem",
-
-    }
+    };
+    const styles = {
+      sidebarBackground:"rgb(214, 201, 223)",
+      header:{textAlign:"center", fontSize:"2rem"},
+      level0:{
+        fontSize:"1.4rem",
+        backgroundColor:'rgb(214, 201, 223)'
+      },
+      
+    };
+    const eraser = <img src={logo} alt='Eraser'  width={35} height={35} style={{opacity:isEraser?0.4:1}}onClick={onEraser}/>
   return (
-    <div style={{ display: "flex", height: "100vh",userSelect:"none"}}>
+    <div className='container'>
     <Sidebar 
       className="app"  
       style={{ height: "100%", position:"fixed"}} 
@@ -52,7 +63,7 @@ function LeftSideBar({
       // onMouseLeave={()=>setCollapsed(true)}
       collapsedWidth={"70px"} 
       collapsed={collapsed}
-      backgroundColor={"rgb(214, 201, 223)"}
+      backgroundColor={styles.sidebarBackground}
       transitionDuration={200}
       >
       
@@ -60,66 +71,44 @@ function LeftSideBar({
         button: ({ level, active, disabled }) => {
           // only apply styles on first level elements of the tree
           if (level === 0)
-            return {
-              fontSize:"1.4rem",
-              backgroundColor:  'rgb(214, 201, 223)', 
-            };
+            return styles.level0;
           if (level ===1)
-            return{
-              fontSize:"1.4rem",
-              backgroundColor:  'rgb(214, 201, 223)', 
-          };
+            return styles.level0;;
         },
     }}>
       {collapsed ? (<main>
-            <MenuItem
-              icon={<HiMenuAlt2 className="logo-burger" />}
-              onClick={()=>setCollapsed(!collapsed)}
-            ></MenuItem>
-
-            <MenuItem onClick={onFloodFill} icon={<GiPaintBucket />} style={setFloodFillStyle}/>
+            <MenuItem icon={<HiMenuAlt2 className="logo-burger" />} onClick={()=>setCollapsed(!collapsed)}></MenuItem>
+            <MenuItem icon={<GiPaintBucket />} onClick={onFloodFill} style={floodFillStyle}/>
             <MenuItem icon={<FaUndo />} onClick={onPrevState}/>
-            <MenuItem onClick={onRotate} icon={<MdScreenRotation />}/>
-            <MenuItem onClick={onEraser} icon={
-              <img src={logo} alt='Eraser'  width={35} height={35} style={{opacity:isEraser?0.4:1}}/>
-            }></MenuItem>
-            
+            <MenuItem icon={<MdScreenRotation />} onClick={onRotate} />
+            <MenuItem icon={eraser }></MenuItem>
             </main>
           ) : (
-              <main style={{display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center"}}>
-            <MenuItem
-              suffix={"Menu"}
-              icon={<SlWrench />}
-              style={{textAlign:"center", fontSize:"2rem"}}
-              onClick={()=>setCollapsed(!collapsed)}
-            >
-            </MenuItem>
-            {/* MAZE TOOLS */}
-            <MazeTools onChangeStart={onChangeStart} onDijkstra={onDijkstra} onSetWalls={onSetWalls} gridState={gridState} isWall={isWall}/>
-            
-            <SubMenu label={"Controls"} icon={<AiOutlineControl />} defaultOpen={true} >
-            <MenuItem onClick={onFloodFill} icon={<GiPaintBucket />} style={setFloodFillStyle}>FloodFill</MenuItem>
-            <MenuItem icon={<FaUndo />} onClick={onPrevState}>Undo</MenuItem>
-            {/* CLEAR  */}
-            <ClearDialog onClear = {onClear}></ClearDialog>
+            <main className='mainMenu'>
+              <MenuItem  icon={<SlWrench />}
+                suffix={"Menu"}
+                style={styles.header}
+                onClick={()=>setCollapsed(!collapsed)}
+              ></MenuItem>
 
-            <MenuItem onClick={onRotate} icon={<MdScreenRotation />}>ROTATE</MenuItem>
-            <MenuItem onClick={onEraser} icon={
-               <img src={logo} alt='Eraser' width={40} height={40} style={{opacity:isEraser?0.4:1}}/>
-            }>ERASER</MenuItem>
-            </SubMenu>
-            
-             
-
-            <SubMenu label={"Grid size"} icon={<BsGrid3X3Gap />}defaultOpen={true}>
-              <GridSetting matrix={matrix} setMatrix={setMatrix} onRotate={onRotate} onClear={onClear}/>
-            </SubMenu>
-
+              <MazeTools onChangeStart={onChangeStart} onDijkstra={onDijkstra} onSetWalls={onSetWalls} gridState={gridState} isWall={isWall}/>
               
-              
-              <MenuItem onClick={onRandomImage} className='randomImg' 
-                  style={rndImageStyle}>RandomImage</MenuItem>
-              </main>
+             <ControlTools onDownload={()=>download()} 
+              onEraser={onEraser} 
+              onPrevState={onPrevState} 
+              onFloodFill={onFloodFill} 
+              floodFill={floodFill} 
+              onRotate={onRotate} 
+              isEraser={isEraser}
+              onClear={onClear}
+             ></ControlTools>
+
+              <SubMenu label={"Grid size"} icon={<BsGrid3X3Gap />}defaultOpen={true}>
+                <GridSetting matrix={matrix} setMatrix={setMatrix} onRotate={onRotate} onClear={onClear}/>
+              </SubMenu>
+
+              <MenuItem onClick={onRandomImage} style={rndImageStyle}>RandomImage</MenuItem>
+            </main>
           )}
 
 

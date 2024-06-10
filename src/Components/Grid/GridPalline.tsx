@@ -7,7 +7,7 @@ import { Grid } from '../../model/Grid';
 import { Node } from '../../model/Node';
 import { Dijkstra } from '../../Algorithm/Dijkstra';
 import { fetchRandomImage } from "../../Service/imgService";
-import {loadImg,countColors, rotateMatrix} from '../../Controller/imgUtils' 
+import {loadImg,countColors, rotateMatrix} from '../../Controller/imgUtils';
 import ColorStory from '../ColorStory/ColorStory';
 import { grid } from '../../model/GridStatus';
 import GridComponent from './GridComponent';
@@ -17,17 +17,13 @@ import { OperationOnGrid } from '../../Controller/OperationOnGrid';
 import { dijkstraOperation } from '../../Controller/dijkstraOperation';
 
 
+
 // import MazeGame from './Partials/MazeGame';
 
-// const styles = {
-//     sideBarHeight: {
-//       height: "145vh"
-//     },
-//     menuIcon: {
-//       float: "right",
-//       margin: "10px"
-//     }
-//   };//use with styles.menuIcon
+const styles = {
+    dijkstraColor :"#aee4ac",
+    dijkstraPath : '#cb4d1e',
+  };
 
 let operationList:OperationOnGrid[] = [];
 
@@ -146,7 +142,7 @@ export default function GridPalline() {
             }
             const node = visitedNodes[i];
             setTimeout(() => {
-                changeMatrix(node.row,node.col,"#aee4ac");
+                changeMatrix(node.row,node.col,styles.dijkstraColor);
             }, 10 * i);
             dijkstraOperationList.addOperation({
                 i:node.row,
@@ -162,7 +158,7 @@ export default function GridPalline() {
         for (let i = 0; i < nodesInshortestPath.length; i++) {
         const node = nodesInshortestPath[i];
         setTimeout(() => {
-            changeMatrix(node.row,node.col,'#cb4d1e')
+            changeMatrix(node.row,node.col,styles.dijkstraPath)
         }, 50 * i);
         dijkstraOperationList.addOperation({
             i:node.row,
@@ -192,6 +188,7 @@ export default function GridPalline() {
     function switchEraser(){
         if(gridState === grid.eraser){
             setGridState(grid.draw)
+
         }
         else{
             setGridState(grid.eraser)
