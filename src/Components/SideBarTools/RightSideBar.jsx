@@ -1,8 +1,8 @@
-import React from 'react'
+import React,{useState} from 'react'
 import { Sidebar, Menu, MenuItem} from 'react-pro-sidebar';
 import { ColorPicker } from "react-color-palette";
 
-function RightSideBar({collapsed,color,setColor,handleMouseEnter,handleMouseLeave,onFixSidebar}) {
+function RightSideBar({color,setColor}) {
 
   const styles = {
     sidebarWidth:"500px",
@@ -10,26 +10,27 @@ function RightSideBar({collapsed,color,setColor,handleMouseEnter,handleMouseLeav
     sideBarStyles:{ height: "100%",position:"fixed",right:"0"},
     sidebarBackgroundColor:"rgb(175, 157, 212, 0.235)",
   }
-
+  const [rightSidebarCollapsed, setRightCollapsed] = useState(true);      //Right Sidebar state
+  const [fixRightSidebar,setfixRightSidebar] = useState(false);
 
   return (
     //  className="rightSideBar"
     <div style={{ display: "flex", height: "100vh" }}>
       <Sidebar className="app2"  
         style={ styles.sideBarStyles} //marginRight:"0px",marginLeft:"auto",float:"right",
-        collapsed ={collapsed}
+        collapsed ={rightSidebarCollapsed}
         collapsedWidth={"60px"} 
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
+        onMouseEnter={()=>{if(!fixRightSidebar)setRightCollapsed(false)}}
+        onMouseLeave={()=>{if(!fixRightSidebar)setRightCollapsed(true)}}
         backgroundColor={styles.sidebarBackgroundColor}
         transitionDuration={200} 
         width={styles.sidebarWidth}
       >
       <Menu>
-        {!collapsed ? (
+        {!rightSidebarCollapsed ? (
           <div className='colorPicker'>
             <ColorPicker height={styles.colorPickerHeight} color={color} onChange={setColor} />
-            <button className='fixButton' onClick={onFixSidebar}>
+            <button className='fixButton' onClick={() =>setfixRightSidebar(!fixRightSidebar)}>
                 FIX
             </button>
                   

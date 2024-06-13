@@ -13,9 +13,8 @@ interface GridProps{
     matrix:Node[][];    //MATRIX
     gridState:grid;     //state
     color:IColor;       //Color to use
-    dijkstra:any;       //dijkstra operating the grid   <-----
+    dijkstra:any;       //dijkstra operating the grid 
     isSetWall:boolean;  //Setting walls
-
     setGridState:Function;  //Make it handler
     setMatrix:Function;     //For fill matrix
     changeMatrix:Function; 
@@ -55,7 +54,7 @@ function GridComponent({matrix,gridState,setGridState,setMatrix,pushColor,setPoi
         }
         if(gridState === grid.start){
             addSimpleOperation({i:i,j:j,color:"start",prevColor:matrix[i][j].value});
-            changeMatrix(i,j,'#01ff00')
+            changeMatrix(i,j,'#01ff00');
             setPoints({
                 ...dijkstra, 
                 START_NODE_ROW:i,
@@ -66,7 +65,7 @@ function GridComponent({matrix,gridState,setGridState,setMatrix,pushColor,setPoi
         }
         if(gridState === grid.finish){
             addSimpleOperation({i:i,j:j,color:"finish",prevColor:matrix[i][j].value});
-            changeMatrix(i,j,'#fe0000')
+            changeMatrix(i,j,'#fe0000');
             setPoints({
                 ...dijkstra, 
                 FINISH_NODE_ROW:i,

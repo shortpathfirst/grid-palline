@@ -1,12 +1,13 @@
 import React from 'react';
 import { useState, createContext } from 'react';
-import { Node } from '../model/Node';
+import { Grid } from '../model/Grid';
 
-const MatrixContext = createContext<Node[][]>([]);
-const MatrixDispatchContext = createContext<Function>(undefined!);
+const MatrixContext = createContext();
+const MatrixDispatchContext = createContext();
 
-const MatrixProvider = ({ children }:any) => {
-  const [matrix, setMatrix] = useState([]);
+
+const MatrixProvider = ({ children }) => {
+  const [matrix, setMatrix] = useState(Grid.createNodes(50,18));
 
   return (
     <MatrixContext.Provider value={matrix}>

@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import '../../styles/grid.css'
-//  Palette
+
 import { IColor, useColor } from "react-color-palette";
 import "react-color-palette/css";
 import { Grid } from '../../model/Grid';
-import { Node } from '../../model/Node';
-import { Dijkstra } from '../../Algorithm/Dijkstra';
 import { fetchRandomImage } from "../../Service/imgService";
 import {loadImg,countColors, rotateMatrix} from '../../Controller/imgUtils';
 import ColorStory from '../ColorStory/ColorStory';
@@ -14,16 +12,7 @@ import GridComponent from './GridComponent';
 import RightSideBar from '../SideBarTools/RightSideBar';
 import LeftSideBar from '../SideBarTools/LeftSideBar';
 import { OperationOnGrid } from '../../Controller/OperationOnGrid';
-import { dijkstraOperation } from '../../Controller/dijkstraOperation';
-
-
-
-// import MazeGame from './Partials/MazeGame';
-
-const styles = {
-    dijkstraColor :"#aee4ac",
-    dijkstraPath : '#cb4d1e',
-  };
+import { Node } from '../../model/Node';
 
 let operationList:OperationOnGrid[] = [];
 
@@ -38,16 +27,12 @@ export default function GridPalline() {
 
     const [matrix,setMatrix] = useState(Grid.createNodes(50,18));            //Grid matrix
 
-    const [dijkstra,setPoints] = useState(dijkstraPoints);
-    const [isSetWall,setWalls] = useState(false);
-    const [gridState,setGridState] = useState(grid.draw);                   //Grid state //USE REDUCER//USE REDUCER//USE REDUCER//USE REDUCER
+    const [dijkstra,setPoints] = useState(dijkstraPoints);                   //START AND END FOR MAZE
+    const [isSetWall,setWalls] = useState(false);                           // WALL MODE
+    const [gridState,setGridState] = useState(grid.draw);                   //Grid state 
 
     const [color, setColor] = useColor("#561ecb");                          //Palette
     const [colorStory,setColorStory] = useState<IColor[]>([]);              //List of color used
-
-    const [rightSidebarCollapsed, setRightCollapsed] = useState(true);      //Right Sidebar state
-    const [fixRightSidebar,setfixRightSidebar] = useState(false);
-
     const [currentImg,setCurrentImg] = useState<string[][]>([[]])
 
     useEffect(() => {
@@ -78,28 +63,31 @@ export default function GridPalline() {
         })
         setMatrix(copy);
     }
-    function resetParams(){
-        let copy = matrix.map((row,i)=>{
-            row.map((n,j)=>{
-                matrix[i][j].isVisited=false;
-                matrix[i][j].distance = Infinity;
-                //@ts-ignore
-                matrix[i][j].previousNode=undefined; //setting undefined
-                matrix[i][j].isStart = false;
-                matrix[i][j].isFinish = false;
-                return  matrix[i][j];
-            })
-            return row;
-        });
-            setMatrix(copy);
-    }
+
     const pushColor = (color:IColor) =>{
         if(colorStory.find((c)=>c.hex===color.hex)){
             return;
         }
         setColorStory([...colorStory,color]);
     }
+    function rotateImage(){
+        setMatrix(rotateMatrix(matrix));
+    }
+    function floodFill(){
+        if(gridState === grid.fill)
+            setGridState(grid.draw)
+        else
+            setGridState(grid.fill)
+    }
+    function switchEraser(){
+        if(gridState === grid.eraser){
+            setGridState(grid.draw)
 
+        }
+        else{
+            setGridState(grid.eraser)
+        }
+    }
 ////////////////////////////////////////////////////////
 ////////////      operations      //////////////////////
     function pushOperation(operation:OperationOnGrid){ 
@@ -128,73 +116,13 @@ export default function GridPalline() {
         setMatrix(Grid.createNodes(50,18));
         operationList=[];
     }
-////////////////////////////////////////////////////////
-////////////     DIJKSTRA         //////////////////////
 
-    function animateDijkstra(visitedNodes:Node[],nodesInshortestPath:Node[]){
-        let dijkstraOperationList = new dijkstraOperation();
-        for (let i = 0; i < visitedNodes.length; i++) {
-            if (i === visitedNodes.length-1) { //Wait animation
-                setTimeout(() => {
-                    animateShortestPath(nodesInshortestPath);
-                }, 10 * i);
-                break;
-            }
-            const node = visitedNodes[i];
-            setTimeout(() => {
-                changeMatrix(node.row,node.col,styles.dijkstraColor);
-            }, 10 * i);
-            dijkstraOperationList.addOperation({
-                i:node.row,
-                j:node.col,
-                color:'dijkstra',
-                prevColor:matrix[node.row][node.col].value});
-        }
-        operationList.push(dijkstraOperationList);
-        resetParams();
+    const handlerMatrixState = (data:Node[][]) => {
+        setMatrix(data);
     }
-    function animateShortestPath(nodesInshortestPath:Node[]) {
-        let dijkstraOperationList = new dijkstraOperation();
-        for (let i = 0; i < nodesInshortestPath.length; i++) {
-        const node = nodesInshortestPath[i];
-        setTimeout(() => {
-            changeMatrix(node.row,node.col,styles.dijkstraPath)
-        }, 50 * i);
-        dijkstraOperationList.addOperation({
-            i:node.row,
-            j:node.col,
-            color:'dijkstra',
-            prevColor:matrix[node.row][node.col].value});
-        }
-        operationList.push(dijkstraOperationList);
+    const handlerStartingDijkstra = (points:any)=>{
+        setPoints(points);
     }
-    function visualizeDijkstra(){
-        const startNode = matrix[dijkstra.START_NODE_ROW][dijkstra.START_NODE_COL];
-        const finishNode = matrix[dijkstra.FINISH_NODE_ROW][dijkstra.FINISH_NODE_COL];
-        const algorithm = new Dijkstra();
-        const visitedNodes = algorithm.dijkstra(matrix,startNode,finishNode); //NEED TO RESET THE NODES OF THE MATRIX
-        const nodesInshortestPath = algorithm.getNodesInShortestPathOrder(finishNode);
-        animateDijkstra(visitedNodes!,nodesInshortestPath); //DO NOT FORCE !
-    }   
-    function rotateImage(){
-        setMatrix(rotateMatrix(matrix));
-    }
-    function floodFill(){
-        if(gridState === grid.fill)
-            setGridState(grid.draw)
-        else
-            setGridState(grid.fill)
-    }
-    function switchEraser(){
-        if(gridState === grid.eraser){
-            setGridState(grid.draw)
-
-        }
-        else{
-            setGridState(grid.eraser)
-        }
-    }
-
   return (
     <>
     <div className='container' >
@@ -204,15 +132,15 @@ export default function GridPalline() {
             onRandomImage ={()=>getRandomImg()}
             onRotate ={() => rotateImage()}
             onClear ={()=>handleClear()}
-
-            onDijkstra ={()=>visualizeDijkstra()}
-            onChangeStart ={()=>setGridState(gridState===-1?grid.start:grid.draw)}
-            onSetWalls ={()=>setWalls(!isSetWall)}
-
+            operationList={operationList}
+            changeMatrix={changeMatrix}
+            dijkstra={dijkstra}
             onFloodFill ={()=>floodFill()}
             onPrevState ={()=>handlePrevState()}
             matrix={matrix}
-            setMatrix={setMatrix}
+            setMatrix={handlerMatrixState}
+            onSetWalls ={()=>setWalls(!isSetWall)}
+            onChangeStart ={()=>setGridState(gridState===-1?grid.start:grid.draw)}
             gridState={gridState}
             isWall={isSetWall}
             floodFill={gridState===grid.fill}
@@ -223,24 +151,19 @@ export default function GridPalline() {
 
         <GridComponent 
         matrix={matrix} 
+        setMatrix={handlerMatrixState} 
         gridState={gridState} 
         setGridState={setGridState} 
-        setMatrix={setMatrix} 
         pushColor={pushColor} 
-        setPoints={setPoints} 
         color={color} 
         dijkstra={dijkstra} 
+        setPoints={handlerStartingDijkstra} 
         isSetWall={isSetWall}
         pushComplexOperation={pushOperation}
         changeMatrix={changeMatrix}
         />
 
-        <RightSideBar 
-            collapsed={rightSidebarCollapsed} 
-            color={color} setColor={setColor} 
-            handleMouseEnter={()=>{if(!fixRightSidebar)setRightCollapsed(false)}} 
-            handleMouseLeave={()=>{if(!fixRightSidebar)setRightCollapsed(true)}}
-            onFixSidebar={() =>setfixRightSidebar(!fixRightSidebar)}/>
+        <RightSideBar  color={color} setColor={setColor} />
 
     </div>
     </>

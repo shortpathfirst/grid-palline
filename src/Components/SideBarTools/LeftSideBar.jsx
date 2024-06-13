@@ -17,18 +17,20 @@ function LeftSideBar({
   onEraser,
   isEraser,
   onRandomImage,
-  onDijkstra,
   onChangeStart,
   onSetWalls,
   onFloodFill,
   onPrevState,
-  matrix,//TO REMOVE
-  setMatrix, // TO REMOVE
+  matrix,
+  setMatrix, 
   onRotate,
   onClear,
   gridState,
   isWall,
   floodFill,
+  operationList,
+  changeMatrix,
+  dijkstra,
 }) {
 
     const [collapsed, setCollapsed] = useState(false);               //Sidebar state
@@ -91,7 +93,17 @@ function LeftSideBar({
                 onClick={()=>setCollapsed(!collapsed)}
               ></MenuItem>
 
-              <MazeTools onChangeStart={onChangeStart} onDijkstra={onDijkstra} onSetWalls={onSetWalls} gridState={gridState} isWall={isWall}/>
+              <MazeTools 
+              onChangeStart={onChangeStart} 
+              onSetWalls={onSetWalls} 
+              gridState={gridState} 
+              isWall={isWall}
+              
+              operationList={operationList}
+              changeMatrix={changeMatrix}
+              dijkstra={dijkstra}
+              matrix={matrix}
+              setMatrix={setMatrix}/>
               
              <ControlTools onDownload={()=>download()} 
               onEraser={onEraser} 
@@ -101,6 +113,7 @@ function LeftSideBar({
               onRotate={onRotate} 
               isEraser={isEraser}
               onClear={onClear}
+              floodFillStyle={floodFillStyle}
              ></ControlTools>
 
               <SubMenu label={"Grid size"} icon={<BsGrid3X3Gap />}defaultOpen={true}>
