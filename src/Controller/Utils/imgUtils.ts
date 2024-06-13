@@ -1,6 +1,6 @@
 import { IColor } from "react-color-palette";
-import { Node } from "../model/Node";
-
+import { Node } from "../../model/Node";
+import { hexToRGBA } from "./hexToRGBA";
     export function rotateMatrix(matrix:Node[][]):Node[][]{
         let newMatrix:Node[][]= []
         let heigth = matrix[0].length;
@@ -37,24 +37,6 @@ import { Node } from "../model/Node";
         return newMatrix;
     }
 
-    export const loadImg = (img:string[][])=>{
-        let newMatrix:Node[][]= []
-        // let width = matrix[0].length > img.data[0].length ? matrix[0].length : img.data[0].length;
-        // let heigth = matrix.length > img.data.length ? matrix.length : img.data.length ;
-        let width = img[0].length;
-        let heigth = img.length;
-        for(let i=0;i<heigth;i++){
-            let currentRow:Node[]= [];
-            for(let j=0;j<width;j++){
-                let a = new Node(i,j);
-                if(i<img.length&&j<img[0].length)
-                    a.value = img[i][j];
-                currentRow.push(a);
-            }
-            newMatrix.push(currentRow);
-        }
-        return newMatrix;
-    }
     export function countColors(img:string[][]){
         let rgbs = new Set<string>();
         for(let i=0; i<img.length;i++){
@@ -108,7 +90,10 @@ import { Node } from "../model/Node";
         //IT WILL FILL THE CANVAS WITH A FLAT ARRAY USING WIDTH AS ROW LENGHT
         
         context.clearRect(0, 0, context.canvas.width, context.canvas.height);
-        context.fillStyle = "rgb("+0+","+0+","+0+")";
+
+        context.fillStyle = "rgba(255,255, 255,0)"; //trasparent
+        context.fillRect(0, 0, context.canvas.width, context.canvas.height);
+
         var convert = require('color-convert');
         
         for(var i = 0; i < pixels.length; i++) { //HEIGHT
@@ -116,24 +101,28 @@ import { Node } from "../model/Node";
                 // Convert pixels[i] to RGB
                 // See http://stackoverflow.com/questions/5623838/rgb-to-hex-and-hex-to-rgb
                 
-                let rgb = convert.hex.rgb(pixels[i][j]);
-                if(!pixels[i][j].startsWith("#")){
-                   rgb = convert.hex.rgb("#ffffff");
+                // let rgb = convert.hex.rgb(pixels[i][j]);
+                let rgba;
+
+                if(pixels[i][j].startsWith("#")){
+                    rgba  = hexToRGBA(pixels[i][j]);
+                }else{
+                    continue;  //    rgb = convert.hex.rgb("#ffffff");
                 }
-                let r = rgb[0];
-                let g = rgb[1];
-                let b = rgb[2];
-                let a = rgb[3];
+                let r = rgba[0];
+                let g = rgba[1];
+                let b = rgba[2];
+                let a = rgba[3];
                 let contour = convert.hex.rgb(shadeColor(pixels[i][j],-30));
-                context.globalAlpha = a; //work with images
-                context.fillStyle = "rgb("+r+","+g+","+b+")";
-                // context.lineWidth = 3;
-                context.strokeStyle = "rgb("+contour[0]+","+contour[1]+","+contour[2]+")";
+                let lineWidth = 2;
+                // context.globalAlpha = a; //work with images
+                context.fillStyle = "rgba("+r+","+g+","+b+","+a+")";
+                context.lineWidth = lineWidth;
+                context.strokeStyle = "rgba("+contour[0]+","+contour[1]+","+contour[2]+","+a+")";
                 context.beginPath();
-                context.roundRect(j*pixelSize, i*pixelSize2, pixelSize, pixelSize2, [40]);
+                context.roundRect(j*pixelSize, i*pixelSize2, pixelSize-1-lineWidth, pixelSize2-1-lineWidth, [40]);
                 context.fill();
                 context.stroke(); 
-                // context.fillRect(j*pixelSize, i*pixelSize2, pixelSize, pixelSize2);
             }
         }
 
@@ -142,7 +131,6 @@ import { Node } from "../model/Node";
         let img = new Image();
         img.src = canvas.toDataURL('image/png');
         canvas.remove();
-
         return img;
     }
     
@@ -182,4 +170,3 @@ import { Node } from "../model/Node";
     
         return "#"+RR+GG+BB;
     }
-    

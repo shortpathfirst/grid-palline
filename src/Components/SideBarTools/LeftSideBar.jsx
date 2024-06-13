@@ -10,8 +10,9 @@ import logo from '../../Assets/Eraser_icon.svg';
 import GridSetting from './Tools/GridSetting';
 import MazeTools from './Tools/MazeTools';
 import '../../styles/leftSidebar.css';
-import {arrayToImg} from '../../Controller/imgUtils' 
+import {arrayToImg} from '../../Controller/Utils/imgUtils' 
 import ControlTools from './Tools/ControllTools/ControlTools';
+import FileSelector from './Tools/ControllTools/FileSelector';
 
 function LeftSideBar({
   onEraser,
@@ -31,13 +32,23 @@ function LeftSideBar({
   operationList,
   changeMatrix,
   dijkstra,
+  handleLoadImage,
 }) {
 
     const [collapsed, setCollapsed] = useState(false);               //Sidebar state
+
+    // < input multiple  TO ACCEPT MULTIPLE FILE
     function download(){
         arrayToImg(matrix);
     }
+    const [scale,setScale] = useState(75);
 
+    function handleUpScale (){
+      setScale(scale+10);
+    }
+    function handleDownScale (){
+      setScale(scale-10);
+    }
     const floodFillStyle = floodFill?{backgroundColor:"#9f8dc6"}:{};
 
     const rndImageStyle = {
@@ -60,7 +71,7 @@ function LeftSideBar({
     <div className='container'>
     <Sidebar 
       className="app"  
-      style={{ height: "100%", position:"fixed"}} 
+      style={{ height: "100%",position:"fixed"}} 
       // onMouseEnter={()=>setCollapsed(false)}
       // onMouseLeave={()=>setCollapsed(true)}
       collapsedWidth={"70px"} 
@@ -121,6 +132,9 @@ function LeftSideBar({
               </SubMenu>
 
               <MenuItem onClick={onRandomImage} style={rndImageStyle}>RandomImage</MenuItem>
+              <FileSelector handleLoadImage={handleLoadImage} maxSizeScale={scale}></FileSelector>
+              <MenuItem onClick={()=>handleUpScale()}>Upscale</MenuItem>
+              <MenuItem onClick={()=>handleDownScale()}>Downscale</MenuItem>
             </main>
           )}
 

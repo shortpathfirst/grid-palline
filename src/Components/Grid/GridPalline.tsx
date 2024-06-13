@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import '../../styles/grid.css'
-
 import { IColor, useColor } from "react-color-palette";
 import "react-color-palette/css";
 import { Grid } from '../../model/Grid';
 import { fetchRandomImage } from "../../Service/imgService";
-import {loadImg,countColors, rotateMatrix} from '../../Controller/imgUtils';
+import {countColors, rotateMatrix} from '../../Controller/Utils/imgUtils';
+import { LoadUtils } from '../../Controller/Utils/LoadUtils';
 import ColorStory from '../ColorStory/ColorStory';
 import { grid } from '../../model/GridStatus';
 import GridComponent from './GridComponent';
@@ -41,9 +41,13 @@ export default function GridPalline() {
     function getRandomImg(){
         fetchRandomImage().then(img => {
             setCurrentImg(img.data);
-            setColorStory(countColors(img.data));
-            setMatrix(loadImg(img.data));
+            handleLoadImage(img.data);
+            
          });
+    }
+    function handleLoadImage(img:string[][]){
+        setColorStory(countColors(img));
+        setMatrix(LoadUtils.loadImg(img));
     }
 
     function changeMatrix(iIndex:number,jIndex:number,value?:string,isWall?:boolean){
@@ -144,6 +148,7 @@ export default function GridPalline() {
             gridState={gridState}
             isWall={isSetWall}
             floodFill={gridState===grid.fill}
+            handleLoadImage={handleLoadImage}
             ></LeftSideBar>
    
 
@@ -162,7 +167,6 @@ export default function GridPalline() {
         pushComplexOperation={pushOperation}
         changeMatrix={changeMatrix}
         />
-
         <RightSideBar  color={color} setColor={setColor} />
 
     </div>
