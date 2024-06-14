@@ -14,6 +14,7 @@ import {arrayToImg} from '../../Controller/Utils/imgUtils'
 import ControlTools from './Tools/ControllTools/ControlTools';
 import FileSelector from './Tools/ControllTools/FileSelector';
 
+
 function LeftSideBar({
   onEraser,
   isEraser,
@@ -41,17 +42,11 @@ function LeftSideBar({
     function download(){
         arrayToImg(matrix);
     }
-    const [scale,setScale] = useState(75);
 
-    function handleUpScale (){
-      setScale(scale+10);
-    }
-    function handleDownScale (){
-      setScale(scale-10);
-    }
     const floodFillStyle = floodFill?{backgroundColor:"#9f8dc6"}:{};
 
     const rndImageStyle = {
+      display:"none", //CURRENTLY HIDDEN
       background:"conic-gradient(from 45deg,red,yellow,lime,aqua,blue,magenta,red)",
       fontSize:"1.4rem",
       fontWeight:"bolder",
@@ -131,10 +126,9 @@ function LeftSideBar({
                 <GridSetting matrix={matrix} setMatrix={setMatrix} onRotate={onRotate} onClear={onClear}/>
               </SubMenu>
 
-              <MenuItem onClick={onRandomImage} style={rndImageStyle}>RandomImage</MenuItem>
-              <FileSelector handleLoadImage={handleLoadImage} maxSizeScale={scale}></FileSelector>
-              <MenuItem onClick={()=>handleUpScale()}>Upscale</MenuItem>
-              <MenuItem onClick={()=>handleDownScale()}>Downscale</MenuItem>
+               <FileSelector handleLoadImage={handleLoadImage}></FileSelector>
+
+              <MenuItem onClick={onRandomImage} style={rndImageStyle} >RandomImage</MenuItem>
             </main>
           )}
 

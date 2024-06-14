@@ -4,7 +4,8 @@ import { IColor, useColor } from "react-color-palette";
 import "react-color-palette/css";
 import { Grid } from '../../model/Grid';
 import { fetchRandomImage } from "../../Service/imgService";
-import {countColors, rotateMatrix} from '../../Controller/Utils/imgUtils';
+import {countColors} from '../../Controller/Utils/imgUtils';
+import { RotateUtils } from '../../Controller/Utils/RotateUtils';
 import { LoadUtils } from '../../Controller/Utils/LoadUtils';
 import ColorStory from '../ColorStory/ColorStory';
 import { grid } from '../../model/GridStatus';
@@ -13,6 +14,7 @@ import RightSideBar from '../SideBarTools/RightSideBar';
 import LeftSideBar from '../SideBarTools/LeftSideBar';
 import { OperationOnGrid } from '../../Controller/OperationOnGrid';
 import { Node } from '../../model/Node';
+
 
 let operationList:OperationOnGrid[] = [];
 
@@ -75,7 +77,7 @@ export default function GridPalline() {
         setColorStory([...colorStory,color]);
     }
     function rotateImage(){
-        setMatrix(rotateMatrix(matrix));
+        setMatrix(RotateUtils.rotateMatrix(matrix));
     }
     function floodFill(){
         if(gridState === grid.fill)

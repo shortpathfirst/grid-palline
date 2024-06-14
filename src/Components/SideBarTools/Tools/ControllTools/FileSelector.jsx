@@ -1,24 +1,36 @@
 import React , { useRef,useState,useEffect} from 'react'
-import { MenuItem } from 'react-pro-sidebar';
+import { MenuItem,SubMenu } from 'react-pro-sidebar';
 import { LuFolderOpen } from "react-icons/lu";
 import { LoadUtils } from '../../../../Controller/Utils/LoadUtils';
 import { ImageUtils } from '../../../../Controller/Utils/ImageUtils';
-function FileSelector({handleLoadImage,maxSizeScale}) {
+import { BsZoomIn } from "react-icons/bs";
+import { BsZoomOut } from "react-icons/bs";
+
+function FileSelector({handleLoadImage}) {
 
     const [file, setFile] = useState(null);
+    const [maxSizeScale,setScale] = useState(75);
+    const [ANTIALIASING,setAntialiasing] = useState(false);
+    const [height,setHeight] = useState(120);
     const fileSelector =useRef(null);
     const canvasRef = useRef(null);
+    
+    const style ={
+      menu:file?{display:'flex',justifyContent:'center',alignItems:'center',height:height,backgroundColor:'rgb(214, 201, 223)'}:{display:"none"},
+      canvas_height:120,
+      canvas_width:200,
+    }
 
     useEffect(() => {
       if(file)
         handleChange(file)
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [maxSizeScale]); 
+    }, [maxSizeScale,ANTIALIASING]); 
 
     const draw = (ctx,img)=>{
       //Draw canvas
       ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height); //To empty the canvas
-      ctx.imageSmoothingEnabled = false; //DISABLE ANTIALIASING
+      ctx.imageSmoothingEnabled = ANTIALIASING; //DISABLE ANTIALIASING
       let aspectRatio = img.width /img.height;
       // var hRatio = ctx.canvas.width / img.width    ;
       // var vRatio = ctx.canvas.height / img.height  ;
@@ -33,6 +45,12 @@ function FileSelector({handleLoadImage,maxSizeScale}) {
       }
       return [width,height];
     }
+    const drawThumbnail = (drawCxt,img,width,height)=>{
+      let ratio = width/height;
+      let drawHeight = Math.min(style.canvas_width/ratio,style.canvas_height);
+      drawCxt.clearRect(0, 0, drawCxt.canvas.width, drawCxt.canvas.height); //To empty the canvas
+      drawCxt.drawImage(img, 0, (drawCxt.canvas.height-drawHeight)/2,style.canvas_width,drawHeight); //Draw thumbnail
+    }
 
     const onSelectImage= ()=>{
       fileSelector.current.click();
@@ -41,8 +59,10 @@ function FileSelector({handleLoadImage,maxSizeScale}) {
       event.stopPropagation();
       event.preventDefault();
       let file = event.target.files[0];
+
       setFile(file);
       handleChange(file);
+      setScale(75);
       // console.log(file);
         // lastModified : 1717409178714
         // lastModifiedDate: Mon Jun 03 2024 12:06:18 GMT+0200 (Ora legale dell’Europa centrale) {}
@@ -55,14 +75,17 @@ function FileSelector({handleLoadImage,maxSizeScale}) {
     
       const handleChange = (file) => {
       let fileReader, isCancel = false;
-      var ctx = canvasRef.current.getContext("2d");//
+      var drawCxt= canvasRef.current.getContext("2d");//
+      let canvas = document.createElement('canvas');
+      let ctx = canvas.getContext('2d'); //trycatch
       if (file) {
         LoadUtils.loadFile(file).then((result)=>{// WAIT FILE TO READ
           if (result && !isCancel) {
 
             LoadUtils.loadImageFile(result).then((img)=>{ //WAIT IMAGE LOADING
-              
+              setHeight(Math.min(style.canvas_height,img.height))
               let [width,height]= draw(ctx,img); //DRAW CANVAS
+              drawThumbnail(drawCxt,img,width,height);
               let imgData = ctx.getImageData(0, 0, width, height); // get the image array
               let hexArray = ImageUtils.getArrayData(imgData,width); //Convert to HEX
               handleLoadImage(hexArray);
@@ -78,23 +101,36 @@ function FileSelector({handleLoadImage,maxSizeScale}) {
         }
       }}
 
+      function handleUpScale (){
+        setScale(maxSizeScale+5);
+      }
+      function handleDownScale (){
+        setScale(maxSizeScale-5);
+      }
   return (
-    <div>
-    <MenuItem onClick={onSelectImage} icon={<LuFolderOpen />}>
-    Select a File
-    <input 
-      ref={fileSelector}
-      type="file" 
-      id="file-selector" 
-      accept=".gif,.png,.jpg" 
-      style={{display: 'none'}}
-      onChange={onFileChange.bind(this)} 
-    ></input>
-    
-  </MenuItem>
-  <canvas ref={canvasRef}/>
+    <SubMenu label={"Image"} icon={<LuFolderOpen /> }defaultOpen={true} >
+      <MenuItem onClick={onSelectImage} icon={<LuFolderOpen />} >
+      Select a File
+      <input 
+        ref={fileSelector}
+        type="file" 
+        id="file-selector" 
+        accept=".gif,.png,.jpg" 
+        style={{display: 'none'}}
+        onChange={onFileChange.bind(this)} 
+      ></input>
+      
+      </MenuItem>
+      <div style={style.menu}>
+        <canvas ref={canvasRef} width={style.canvas_width} height={style.canvas_height}/>
+      </div>
+        
+      <MenuItem icon={<BsZoomIn />} onClick={()=>handleUpScale()}>Upscale</MenuItem>
+      <MenuItem icon={<BsZoomOut />} onClick={()=>handleDownScale()}>Downscale</MenuItem>
+      <MenuItem onClick={()=>setAntialiasing(!ANTIALIASING)}>ANTIALIASING</MenuItem>
+    </SubMenu>
 
-  </div>
+  
   )
 }
 

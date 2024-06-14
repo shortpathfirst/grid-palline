@@ -1,41 +1,7 @@
 import { IColor } from "react-color-palette";
 import { Node } from "../../model/Node";
 import { hexToRGBA } from "./hexToRGBA";
-    export function rotateMatrix(matrix:Node[][]):Node[][]{
-        let newMatrix:Node[][]= []
-        let heigth = matrix[0].length;
-        let width = matrix.length ;     
-                
-        for(let i=0;i<heigth;i++){
-            let currentRow:Node[]= [];
-            for(let j=0;j<width;j++){
-                let a = new Node(i,j);
-                a.value = matrix[matrix.length-1-j][i].value;
-                currentRow.push(a);
-            }
-            newMatrix.push(currentRow);
-        }
-        
-        return newMatrix;
 
-    }
-    export function rotate(currentImg:string[][]):Node[][]{
-        let newMatrix:Node[][]= []
-        let heigth = currentImg[0].length;
-        let width = currentImg.length ;     
-                
-        for(let i=0;i<heigth;i++){
-            let currentRow:Node[]= [];
-            for(let j=0;j<width;j++){
-                let a = new Node(i,j);
-                a.value = currentImg[currentImg.length-1-j][i];
-                currentRow.push(a);
-            }
-            newMatrix.push(currentRow);
-        }
-        
-        return newMatrix;
-    }
 
     export function countColors(img:string[][]){
         let rgbs = new Set<string>();
