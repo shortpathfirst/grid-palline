@@ -1,7 +1,7 @@
 
 const Welcome=()=>{
     return(
-      <div id="loader-container">
+      <div id="loader-container"style={{display:"flex",justifyContent:"center",alignItems:"center",marginTop:"20%"}}>
         <svg id="loader" width="285" height="59" viewBox="0 0 285 59" fill="none" xmlns="http://www.w3.org/2000/svg">
   <mask id="path-1-outside-1_1_6" maskUnits="userSpaceOnUse" x="0.636353" y="0.818176" width="284" height="58" fill="black">
   <rect fill="white" x="0.636353" y="0.818176" width="284" height="58"/>

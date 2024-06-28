@@ -14,7 +14,7 @@ function MyComponent() {
   }, []);
 
   if (isLoading) {
-    return <Welcome/>
+    return <Welcome />
   }
 
   return (

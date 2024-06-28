@@ -7,24 +7,25 @@ import { FloodFillAlgorithm } from '../../Algorithm/FloodFillAlgorithm';
 import Pallina from './Pallina';
 import { SimpleOperation } from '../../Controller/SimpleOperation';
 import { FloodFillOperation } from '../../Controller/FloodFillOperation';
+import { WallOperation } from '../../Controller/WallOperation';
 
 
 interface GridProps{
     matrix:Node[][];    //MATRIX
     gridState:grid;     //state
     color:IColor;       //Color to use
-    dijkstra:any;       //dijkstra operating the grid 
     isSetWall:boolean;  //Setting walls
     setGridState:Function;  //Make it handler
     setMatrix:Function;     //For fill matrix
     changeMatrix:Function; 
-    pushColor:Function;     //use callback
-    setPoints:Function;     //use callback
-    pushComplexOperation:Function;  //use callback
+    pushColor:Function;     
+    pushComplexOperation:Function;  
+    handleSetDijkstra:Function;
+    isVertical:boolean;
     
 }
 
-function GridComponent({matrix,gridState,setGridState,setMatrix,pushColor,setPoints,pushComplexOperation,color,dijkstra,isSetWall,changeMatrix}:GridProps) {
+function GridComponent({matrix,gridState,setGridState,setMatrix,pushColor,pushComplexOperation,color,isSetWall,changeMatrix,handleSetDijkstra,isVertical}:GridProps) {
     const [draw,setDraw] = useState(false);           //Activate pen mouse up and mouse down
 
     useEffect(() => {
@@ -32,8 +33,13 @@ function GridComponent({matrix,gridState,setGridState,setMatrix,pushColor,setPoi
     },[])//add listener 1 time only
 
     function addSimpleOperation(operation:Operation){
-        let myOperation = new SimpleOperation(operation);
-        pushComplexOperation(myOperation);
+        if(isSetWall){//ADD WALL OPERATION
+            let myOperation = new WallOperation(operation);
+            pushComplexOperation(myOperation);
+        }else{//ADD SIMPLE OPERATION
+            let myOperation = new SimpleOperation(operation);
+            pushComplexOperation(myOperation);
+        }
     }
 
     function handleClick(e:any,i:number,j:number){
@@ -55,33 +61,25 @@ function GridComponent({matrix,gridState,setGridState,setMatrix,pushColor,setPoi
         if(gridState === grid.start){
             addSimpleOperation({i:i,j:j,color:"start",prevColor:matrix[i][j].value});
             changeMatrix(i,j,'#01ff00');
-            setPoints({
-                ...dijkstra, 
-                START_NODE_ROW:i,
-                START_NODE_COL: j 
-              });
+            handleSetDijkstra([i,j]);
             setGridState(grid.finish);
             return;
         }
         if(gridState === grid.finish){
             addSimpleOperation({i:i,j:j,color:"finish",prevColor:matrix[i][j].value});
             changeMatrix(i,j,'#fe0000');
-            setPoints({
-                ...dijkstra, 
-                FINISH_NODE_ROW:i,
-                FINISH_NODE_COL: j 
-              });
+            handleSetDijkstra(undefined,[i,j]);
             setGridState(grid.draw);
             return;
         }
         setDraw(true);
-
+        addSimpleOperation({i:i,j:j,color:gridState === grid.eraser?'':color.hex,prevColor:matrix[i][j].value});
         if(gridState === grid.draw) pushColor(color);
 
-        addSimpleOperation({i:i,j:j,color:gridState === grid.eraser?'':color.hex,prevColor:matrix[i][j].value});
         let value = gridState === grid.eraser?'':color.hex;
         let isWall = gridState === grid.draw && isSetWall;
         changeMatrix(i,j,value,isWall);
+        
 
     }
 
@@ -105,10 +103,10 @@ function GridComponent({matrix,gridState,setGridState,setMatrix,pushColor,setPoi
                 j:jClicked,
                 color:gridState === grid.eraser?'':color.hex,
                 prevColor:matrix[iClicked][jClicked].value});
-
             let value:string = gridState === grid.eraser?'':color.hex;
             let isWall:boolean = (matrix[iClicked][jClicked].value===color.hex || gridState === grid.draw)&& isSetWall;
             changeMatrix(iClicked,jClicked,value,isWall);
+            
         }   
     }
 
@@ -121,6 +119,7 @@ function GridComponent({matrix,gridState,setGridState,setMatrix,pushColor,setPoi
 
                     return (
                         <Pallina key={`node-${i}-${j}`}
+                        isVertical={isVertical}
                         row={i}
                         col={j}
                         onContextMenu={(e:any)=>{handleRight(e,i,j)}} 

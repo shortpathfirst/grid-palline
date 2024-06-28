@@ -25,7 +25,6 @@ export class Node{
     setDefaultParam(){
         this.distance = Infinity;
         this.isVisited = false;
-        // this.isWall = false;
         //@ts-ignore //"strictNullChecks": true tsconfig
         this.previousNode = null;
     }

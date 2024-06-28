@@ -36,6 +36,7 @@ export default function GridPalline() {
     const [color, setColor] = useColor("#561ecb");                          //Palette
     const [colorStory,setColorStory] = useState<IColor[]>([]);              //List of color used
     const [currentImg,setCurrentImg] = useState<string[][]>([[]])
+    const [pallinaOrientation,setPallinaOrientation] = useState(true);
 
     useEffect(() => {
     },[currentImg])//add listener 1 time only
@@ -58,8 +59,8 @@ export default function GridPalline() {
                 if(iIndex===i && jIndex===j){
                     if(value || value ==='')
                         matrix[i][j].value=value;
-                    if(!!isWall)
-                        matrix[i][j].isWall=isWall;
+                    
+                        matrix[i][j].isWall=isWall!; //may cause error
 
                     return  matrix[i][j]; // need to make a copy of the node
                 }
@@ -68,6 +69,22 @@ export default function GridPalline() {
             return row;
         })
         setMatrix(copy);
+    }
+    function handleSetDijkstra(s?:number[],f?:number[]){
+        if(f){
+        setPoints({
+            ...dijkstra, 
+            FINISH_NODE_ROW: f[0],
+            FINISH_NODE_COL: f[1] 
+          });
+        }
+        if(s){
+        setPoints({
+            ...dijkstra, 
+            START_NODE_ROW: s[0],
+            START_NODE_COL: s[1]
+            });
+        }
     }
 
     const pushColor = (color:IColor) =>{
@@ -112,7 +129,7 @@ export default function GridPalline() {
             let simpleOne = complexOne[0];
             let i = simpleOne.i;
             let j = simpleOne.j
-            changeMatrix(i,j,simpleOne.prevColor) //O(10n) with map is O(n)
+            changeMatrix(i,j,simpleOne.prevColor,false) //O(10n) with map is O(n)
             count++;
         }
 
@@ -125,9 +142,6 @@ export default function GridPalline() {
 
     const handlerMatrixState = (data:Node[][]) => {
         setMatrix(data);
-    }
-    const handlerStartingDijkstra = (points:any)=>{
-        setPoints(points);
     }
   return (
     <>
@@ -151,6 +165,7 @@ export default function GridPalline() {
             isWall={isSetWall}
             floodFill={gridState===grid.fill}
             handleLoadImage={handleLoadImage}
+            handleRotatePallina = {()=>setPallinaOrientation(!pallinaOrientation)}
             ></LeftSideBar>
    
 
@@ -163,11 +178,11 @@ export default function GridPalline() {
         setGridState={setGridState} 
         pushColor={pushColor} 
         color={color} 
-        dijkstra={dijkstra} 
-        setPoints={handlerStartingDijkstra} 
+        handleSetDijkstra={handleSetDijkstra} 
         isSetWall={isSetWall}
         pushComplexOperation={pushOperation}
         changeMatrix={changeMatrix}
+        isVertical={pallinaOrientation}
         />
         <RightSideBar  color={color} setColor={setColor} />
 

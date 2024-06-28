@@ -1,4 +1,4 @@
-import React , { useRef,useState,useEffect} from 'react'
+import React , { useRef,useState,useEffect, createElement} from 'react'
 import { MenuItem,SubMenu } from 'react-pro-sidebar';
 import { LuFolderOpen } from "react-icons/lu";
 import { LoadUtils } from '../../../../Controller/Utils/LoadUtils';
@@ -14,11 +14,13 @@ function FileSelector({handleLoadImage}) {
     const [height,setHeight] = useState(120);
     const fileSelector =useRef(null);
     const canvasRef = useRef(null);
+    const canvasDrawRef = useRef(null);
     
     const style ={
       menu:file?{display:'flex',justifyContent:'center',alignItems:'center',height:height,backgroundColor:'rgb(214, 201, 223)'}:{display:"none"},
       canvas_height:120,
       canvas_width:200,
+      itemState:!file?{display:'none'}:undefined
     }
 
     useEffect(() => {
@@ -28,7 +30,7 @@ function FileSelector({handleLoadImage}) {
     }, [maxSizeScale,ANTIALIASING]); 
 
     const draw = (ctx,img)=>{
-      //Draw canvas
+
       ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height); //To empty the canvas
       ctx.imageSmoothingEnabled = ANTIALIASING; //DISABLE ANTIALIASING
       let aspectRatio = img.width /img.height;
@@ -37,9 +39,9 @@ function FileSelector({handleLoadImage}) {
       // var ratio  = Math.min ( hRatio, vRatio );
       let width = Math.min(maxSizeScale,img.width);
       let height = width/aspectRatio;
-      // let maxHeight = Math.min(height,maxSize.height); to crop image
+      // let maxHeight = Math.min(height,maxSize.height); to crop image and avoid distortion
       if (width/ aspectRatio <= height) {
-        ctx.drawImage(img, 0, 0, width, width / aspectRatio);
+        ctx.drawImage(img, 0, 0, width, width / aspectRatio)
       } else {
         ctx.drawImage(img, 0, 0,height * aspectRatio,height);
       }
@@ -61,8 +63,9 @@ function FileSelector({handleLoadImage}) {
       let file = event.target.files[0];
 
       setFile(file);
-      handleChange(file);
       setScale(75);
+      handleChange(file);
+
       // console.log(file);
         // lastModified : 1717409178714
         // lastModifiedDate: Mon Jun 03 2024 12:06:18 GMT+0200 (Ora legale dell’Europa centrale) {}
@@ -73,20 +76,22 @@ function FileSelector({handleLoadImage}) {
       //SET FILE AS STATE <input multiple>
     }
     
-      const handleChange = (file) => {
+      const handleChange = (file) => {//trycatch
       let fileReader, isCancel = false;
-      var drawCxt= canvasRef.current.getContext("2d");//
-      let canvas = document.createElement('canvas');
-      let ctx = canvas.getContext('2d'); //trycatch
+
+      var drawCxt= canvasRef.current.getContext("2d");
+      // var ctx = document.createElement("canvas",).getContext('2d'); 
+      var ctx =canvasDrawRef.current.getContext("2d");
+
       if (file) {
         LoadUtils.loadFile(file).then((result)=>{// WAIT FILE TO READ
           if (result && !isCancel) {
 
             LoadUtils.loadImageFile(result).then((img)=>{ //WAIT IMAGE LOADING
-              setHeight(Math.min(style.canvas_height,img.height))
+              setHeight(Math.min(style.canvas_height,img.height));
               let [width,height]= draw(ctx,img); //DRAW CANVAS
-              drawThumbnail(drawCxt,img,width,height);
-              let imgData = ctx.getImageData(0, 0, width, height); // get the image array
+              drawThumbnail(drawCxt,img,width,height); //DRAW THUMBNAIL
+              let imgData = ctx.getImageData(0, 0, width, height);
               let hexArray = ImageUtils.getArrayData(imgData,width); //Convert to HEX
               handleLoadImage(hexArray);
               
@@ -123,11 +128,12 @@ function FileSelector({handleLoadImage}) {
       </MenuItem>
       <div style={style.menu}>
         <canvas ref={canvasRef} width={style.canvas_width} height={style.canvas_height}/>
+        <canvas ref={canvasDrawRef} width={style.canvas_width} height={style.canvas_height} style={{display:"none"}}/>
       </div>
         
-      <MenuItem icon={<BsZoomIn />} onClick={()=>handleUpScale()}>Upscale</MenuItem>
-      <MenuItem icon={<BsZoomOut />} onClick={()=>handleDownScale()}>Downscale</MenuItem>
-      <MenuItem onClick={()=>setAntialiasing(!ANTIALIASING)}>ANTIALIASING</MenuItem>
+      <MenuItem icon={<BsZoomIn />} onClick={()=>handleUpScale()} style={style.itemState}>Upscale</MenuItem>
+      <MenuItem icon={<BsZoomOut />} onClick={()=>handleDownScale()} style={style.itemState}>Downscale</MenuItem>
+      <MenuItem onClick={()=>setAntialiasing(!ANTIALIASING)} style={style.itemState}>ANTIALIASING</MenuItem>
     </SubMenu>
 
   

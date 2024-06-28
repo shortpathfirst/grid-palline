@@ -34,6 +34,7 @@ function LeftSideBar({
   changeMatrix,
   dijkstra,
   handleLoadImage,
+  handleRotatePallina,
 }) {
 
     const [collapsed, setCollapsed] = useState(false);               //Sidebar state
@@ -117,6 +118,7 @@ function LeftSideBar({
               onFloodFill={onFloodFill} 
               floodFill={floodFill} 
               onRotate={onRotate} 
+              handleRotatePallina={handleRotatePallina}
               isEraser={isEraser}
               onClear={onClear}
               floodFillStyle={floodFillStyle}
@@ -125,7 +127,8 @@ function LeftSideBar({
               <SubMenu label={"Grid size"} icon={<BsGrid3X3Gap />}defaultOpen={true}>
                 <GridSetting matrix={matrix} setMatrix={setMatrix} onRotate={onRotate} onClear={onClear}/>
               </SubMenu>
-
+              <MenuItem onClick={onRotate} icon={<MdScreenRotation />}>ROTATE</MenuItem>
+              <MenuItem onClick={handleRotatePallina} icon={<MdScreenRotation />}>ROTATE BEAD</MenuItem>
                <FileSelector handleLoadImage={handleLoadImage}></FileSelector>
 
               <MenuItem onClick={onRandomImage} style={rndImageStyle} >RandomImage</MenuItem>

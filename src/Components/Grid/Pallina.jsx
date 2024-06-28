@@ -1,7 +1,9 @@
 import React, { Component } from 'react'
 
 export default class Pallina extends Component {
+
   render() {
+
     const {
       row,
       col,
@@ -14,8 +16,16 @@ export default class Pallina extends Component {
       onPointerUp,
       color,
       opacity,
+      isVertical
     } = this.props;
     
+    const style = { 
+      width:isVertical?"0.8rem":"1.4rem",
+      height: isVertical?"1.4rem":"0.8rem",
+      backgroundColor:color?color:'white', 
+      opacity:opacity,
+    }
+
     return (
       <div className="pallina" 
         key={`node-${row}-${col}`}
@@ -23,7 +33,7 @@ export default class Pallina extends Component {
         onMouseEnter={onMouseEnter} 
         onPointerDown={onPointerDown} 
         onPointerUp={onPointerUp} 
-        style={{ backgroundColor:color?color:'white', opacity:opacity}}>
+        style={style}>
       
     </div>
     )

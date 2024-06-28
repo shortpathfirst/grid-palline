@@ -7,7 +7,9 @@
 }
 .pallina{
     width: 0.8rem;
-    height: 1.6rem;
+    height: 1.4rem;
+    /* width: 0.8rem;
+    height: 1.6rem; */
     /* min-width: 1rem;
     min-height: 2rem; */
     border: solid;
