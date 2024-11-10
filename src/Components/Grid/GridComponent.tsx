@@ -106,7 +106,6 @@ function GridComponent({matrix,gridState,setGridState,setMatrix,pushColor,pushCo
             let value:string = gridState === grid.eraser?'':color.hex;
             let isWall:boolean = (matrix[iClicked][jClicked].value===color.hex || gridState === grid.draw)&& isSetWall;
             changeMatrix(iClicked,jClicked,value,isWall);
-            
         }   
     }
 
@@ -114,23 +113,21 @@ function GridComponent({matrix,gridState,setGridState,setMatrix,pushColor,pushCo
     <div className='grid'>
         {   
             matrix.map((el,i)=>{
-                    
-                return <div className='rows' key={`row ${i}`}> {el.map((val,j)=>{
-
-                    return (
-                        <Pallina key={`node-${i}-${j}`}
+                
+                return <div className='rows' key={`row ${i}`}> 
+                {
+                    el.map((_,j)=>{
+                    return <Pallina key={`node-${i}-${j}`}
                         isVertical={isVertical}
-                        row={i}
-                        col={j}
                         onContextMenu={(e:any)=>{handleRight(e,i,j)}} 
                         onMouseEnter={()=>handleHover(i,j)} 
                         onPointerDown={(e:any)=>handleClick(e,i,j)} 
                         onPointerUp={()=>setDraw(false)}
-                        color={(matrix[i][j].value==='')?'':matrix[i][j].value}
+                        color={matrix[i][j].value}
                         opacity={matrix[i][j].isWall || !isSetWall?1:0.4}
                         />
-                    )
-                })} 
+                    })
+                }
                 </div>
             })
         }

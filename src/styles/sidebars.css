@@ -1,0 +1,24 @@
+.container {
+    display: "flex";
+    height: "100vh";
+    user-select: none;
+}
+
+.mainMenu {
+    display: "flex";
+    flex-direction: column;
+    align-items: "center";
+    justify-content: center;
+}
+
+.rightSidebarContainer {
+    display: flex;
+    height: 100%;
+}
+
+/* marginRight:"0px",marginLeft:"auto",float:"right", */
+.rightSidebar {
+    height: 100%;
+    position: fixed;
+    right: 0;
+}

@@ -9,24 +9,51 @@ import { BsGrid3X3Gap } from "react-icons/bs";
 import logo from '../../Assets/Eraser_icon.svg';
 import GridSetting from './Tools/GridSetting';
 import MazeTools from './Tools/MazeTools';
-import '../../styles/leftSidebar.css';
+import '../../styles/sidebars.css';
 import {arrayToImg} from '../../Controller/Utils/imgUtils' 
 import ControlTools from './Tools/ControllTools/ControlTools';
 import FileSelector from './Tools/ControllTools/FileSelector';
 
+const initialState = {
+  collapsed: false,
+  isEraser: false,
+  floodFill: false,
+  matrix: [],
+  gridState: {},
+  isWall: false,
+};
+function reducer(state, action) {
+  switch (action.type) {
+    case 'TOGGLE_COLLAPSE':
+      return { ...state, collapsed: !state.collapsed };
+    case 'SET_ERASER':
+      return { ...state, isEraser: action.payload };
+    case 'TOGGLE_FLOOD_FILL':
+      return { ...state, floodFill: !state.floodFill };
+    case 'SET_MATRIX':
+      return { ...state, matrix: action.payload };
+    case 'SET_GRID_STATE':
+      return { ...state, gridState: action.payload };
+    case 'SET_IS_WALL':
+      return { ...state, isWall: action.payload };
+    default:
+      return state;
+  }
+}
+console.log( initialState,reducer)
 
 function LeftSideBar({
   onEraser,
-  isEraser,
+  isEraser, 
   onRandomImage,
   onChangeStart,
   onSetWalls,
   onFloodFill,
   onPrevState,
-  matrix,
-  setMatrix, 
   onRotate,
   onClear,
+  matrix,
+  setMatrix, 
   gridState,
   isWall,
   floodFill,
@@ -145,3 +172,89 @@ function LeftSideBar({
 
 export default LeftSideBar
 
+
+
+
+
+//   const eraser = (
+//     <img
+//       src={logo}
+//       alt='Eraser'
+//       width={35}
+//       height={35}
+//       style={{ opacity: state.isEraser ? 0.4 : 1 }}
+//       onClick={() => dispatch({ type: 'SET_ERASER', payload: !state.isEraser })}
+//     />
+//   );
+
+//   return (
+//     <div className='container'>
+//       <Sidebar
+//         className="app"
+//         style={{ height: "100%", position: "fixed" }}
+//         collapsedWidth="70px"
+//         collapsed={state.collapsed}
+//         backgroundColor={styles.sidebarBackground}
+//         transitionDuration={200}
+//       >
+//         <Menu menuItemStyles={{
+//           button: ({ level }) => {
+//             if (level === 0) return styles.level0;
+//             if (level === 1) return styles.level0;
+//           },
+//         }}>
+//           {state.collapsed ? (
+//             <main>
+//               <MenuItem icon={<HiMenuAlt2 className="logo-burger" />} onClick={() => dispatch({ type: 'TOGGLE_COLLAPSE' })}></MenuItem>
+//               <MenuItem icon={<GiPaintBucket />} onClick={onFloodFill} style={floodFillStyle} />
+//               <MenuItem icon={<FaUndo />} onClick={onPrevState} />
+//               <MenuItem icon={<MdScreenRotation />} onClick={onRotate} />
+//               <MenuItem icon={eraser}></MenuItem>
+//             </main>
+//           ) : (
+//             <main className='mainMenu'>
+//               <MenuItem
+//                 icon={<SlWrench />}
+//                 suffix="Menu"
+//                 style={styles.header}
+//                 onClick={() => dispatch({ type: 'TOGGLE_COLLAPSE' })}
+//               ></MenuItem>
+//               <MazeTools
+//                 onChangeStart={onChangeStart}
+//                 onSetWalls={onSetWalls}
+//                 gridState={state.gridState}
+//                 isWall={state.isWall}
+//                 operationList={operationList}
+//                 changeMatrix={changeMatrix}
+//                 dijkstra={dijkstra}
+//                 matrix={state.matrix}
+//                 setMatrix={(newMatrix) => dispatch({ type: 'SET_MATRIX', payload: newMatrix })}
+//               />
+//               <ControlTools
+//                 onDownload={download}
+//                 onEraser={() => dispatch({ type: 'SET_ERASER', payload: !state.isEraser })}
+//                 onPrevState={onPrevState}
+//                 onFloodFill={onFloodFill}
+//                 floodFill={state.floodFill}
+//                 onRotate={onRotate}
+//                 handleRotatePallina={handleRotatePallina}
+//                 isEraser={state.isEraser}
+//                 onClear={onClear}
+//                 floodFillStyle={floodFillStyle}
+//               />
+//               <SubMenu label="Grid size" icon={<BsGrid3X3Gap />} defaultOpen>
+//                 <GridSetting matrix={state.matrix} setMatrix={(newMatrix) => dispatch({ type: 'SET_MATRIX', payload: newMatrix })} onRotate={onRotate} onClear={onClear} />
+//               </SubMenu>
+//               <MenuItem onClick={onRotate} icon={<MdScreenRotation />}>ROTATE</MenuItem>
+//               <MenuItem onClick={handleRotatePallina} icon={<MdScreenRotation />}>ROTATE BEAD</MenuItem>
+//               <FileSelector handleLoadImage={handleLoadImage} />
+//               <MenuItem onClick={onRandomImage} style={rndImageStyle}>RandomImage</MenuItem>
+//             </main>
+//           )}
+//         </Menu>
+//       </Sidebar>
+//     </div>
+//   );
+// }
+
+// export default LeftSideBar;

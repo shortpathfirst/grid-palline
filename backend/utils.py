@@ -4,7 +4,8 @@ import numpy as np
 from PIL import Image,ImageColor
 import json 
 
-dir = "C://Users//Andrea//Desktop//Bracelet"
+# dir = "C://Users//Andrea//Documents//WorkspaceVisualCode//React//grid-palline-bracelet//Bracelet//"
+dir="..//..//Bracelet//"
 folder = dir+"//Img//Mini_14//"
 pathimg = folder+'112230.gif' #'112094.gif'
 

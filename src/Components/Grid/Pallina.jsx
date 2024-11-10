@@ -5,15 +5,10 @@ export default class Pallina extends Component {
   render() {
 
     const {
-      row,
-      col,
-      // isFinish,
-      // isStart,
-      // isWall,
       onContextMenu,
+      onPointerUp,
       onPointerDown,
       onMouseEnter,
-      onPointerUp,
       color,
       opacity,
       isVertical
@@ -28,13 +23,11 @@ export default class Pallina extends Component {
 
     return (
       <div className="pallina" 
-        key={`node-${row}-${col}`}
         onContextMenu={onContextMenu} 
         onMouseEnter={onMouseEnter} 
         onPointerDown={onPointerDown} 
         onPointerUp={onPointerUp} 
         style={style}>
-      
     </div>
     )
   }

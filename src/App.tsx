@@ -1,5 +1,4 @@
 import React,{useEffect} from 'react';
-// import GridPalline from './Visualizer/GridPalline';
 import './App.css';
 import LoadingScreen from './Components/Loading/LoadingScreen';
 import { useLoading } from './hooks/useLoading';
@@ -21,7 +20,6 @@ function App() {
   return (
     <div className='App'>
       <LoadingPage/>
-      {/* <GridPalline></GridPalline> */}
       <LoadingScreen/>
     </div>
   );

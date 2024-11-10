@@ -9,20 +9,20 @@ import logo from '../../../../Assets/Eraser_icon.svg';
 
 
 
-function ControlTools({onFloodFill,floodFillStyle,onPrevState,onEraser,onDownload,isEraser,onClear}) {
+function ControlTools({ onFloodFill, floodFillStyle, onPrevState, onEraser, onDownload, isEraser, onClear }) {
 
-    
-    const eraser = <img src={logo} alt='Eraser' width={40} height={40} style={{opacity:isEraser?0.4:1}}/>;
-    
+
+  const eraser = <img src={logo} alt='Eraser' width={40} height={40} style={{ opacity: isEraser ? 0.4 : 1 }} />;
+
   return (
     <SubMenu label={"Controls"} icon={<AiOutlineControl />} defaultOpen={true} >
-        <MenuItem onClick={onFloodFill} icon={<GiPaintBucket />} style={floodFillStyle}>FloodFill</MenuItem>
-        <MenuItem icon={<FaUndo />} onClick={onPrevState}>Undo</MenuItem>
+      <MenuItem onClick={onFloodFill} icon={<GiPaintBucket />} style={floodFillStyle}>FloodFill</MenuItem>
+      <MenuItem icon={<FaUndo />} onClick={onPrevState}>Undo</MenuItem>
 
-        <ClearDialog onClear = {onClear}></ClearDialog>
-        <MenuItem onClick={onEraser} icon={eraser}>ERASER</MenuItem>
-        <MenuItem onClick={onDownload} icon={<MdDownload />}>DOWNLOAD</MenuItem>
-  </SubMenu>
+      <ClearDialog onClear={onClear}></ClearDialog>
+      <MenuItem onClick={onEraser} icon={eraser}>ERASER</MenuItem>
+      <MenuItem onClick={onDownload} icon={<MdDownload />}>DOWNLOAD</MenuItem>
+    </SubMenu>
   )
 }
 

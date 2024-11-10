@@ -1,23 +1,25 @@
 import React,{useState} from 'react'
 import { Sidebar, Menu, MenuItem} from 'react-pro-sidebar';
 import { ColorPicker } from "react-color-palette";
+import '../../styles/sidebars.css'
+
+// No need for a Sidebar, just hover a div element
 
 function RightSideBar({color,setColor}) {
 
   const styles = {
     sidebarWidth:"500px",
     colorPickerHeight:300,
-    sideBarStyles:{ height: "100%",position:"fixed",right:"0"},
-    sidebarBackgroundColor:"rgb(175, 157, 212, 0.235)",
+    sidebarBackgroundColor:"rgb(175, 157, 212, 0.8)",
   }
   const [rightSidebarCollapsed, setRightCollapsed] = useState(true);      //Right Sidebar state
   const [fixRightSidebar,setfixRightSidebar] = useState(false);
 
   return (
-    //  className="rightSideBar"
-    <div style={{ display: "flex", height: "100vh" }}>
-      <Sidebar className="app2"  
-        style={ styles.sideBarStyles} //marginRight:"0px",marginLeft:"auto",float:"right",
+
+    <div className='rightSidebarContainer'>
+      <Sidebar 
+        className='rightSidebar' 
         collapsed ={rightSidebarCollapsed}
         collapsedWidth={"60px"} 
         onMouseEnter={()=>{if(!fixRightSidebar)setRightCollapsed(false)}}
@@ -33,9 +35,9 @@ function RightSideBar({color,setColor}) {
             <button className='fixButton' onClick={() =>setfixRightSidebar(!fixRightSidebar)}>
                 FIX
             </button>
-                  
           </div>
-        ):(<MenuItem></MenuItem>)
+        )
+        :<MenuItem/>
         }
       </Menu>
       </Sidebar>

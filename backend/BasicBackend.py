@@ -2,8 +2,6 @@
 ################MAKE ANOTHER FILE
 
 from flask import Flask
-import flask
-import json
 from flask_cors import CORS
 import random
 import utils
