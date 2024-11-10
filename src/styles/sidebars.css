@@ -11,14 +11,3 @@
     justify-content: center;
 }
 
-.rightSidebarContainer {
-    display: flex;
-    height: 100%;
-}
-
-/* marginRight:"0px",marginLeft:"auto",float:"right", */
-.rightSidebar {
-    height: 100%;
-    position: fixed;
-    right: 0;
-}
