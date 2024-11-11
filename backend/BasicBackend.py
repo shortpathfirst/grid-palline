@@ -1,5 +1,4 @@
 #   https://tms-dev-blog.com/python-backend-with-javascript-frontend-how-to/
-################MAKE ANOTHER FILE
 
 from flask import Flask
 from flask_cors import CORS

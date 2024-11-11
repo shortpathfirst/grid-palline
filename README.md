@@ -3,16 +3,16 @@
 # Beads editor
 An easy and simple editor for making bracelets or necklaces using colored beads.
 
-<img src='docs/Board.PNG' height="300">
-<img src='docs/board2.PNG' height="300">
+<img src='_docs/Board.PNG' height="300">
+<img src='_docs/board2.PNG' height="300">
 
 
 ## React-pro-sidebar
 As tools it use [React-pro-sidebar](https://www.npmjs.com/package/react-pro-sidebar)
 with a maze minigame being able to construct a maze and run it with dijkstra algorithm to find the solution
 
-<img src='docs/ProSidebar.PNG' height="400" style="float: left; margin-right:2rem">
-<img src='docs/All.PNG' height="400" >
+<img src='_docs/ProSidebar.PNG' height="400" style="float: left; margin-right:2rem">
+<img src='_docs/All.PNG' height="400" >
 
 
 ## Available Scripts
