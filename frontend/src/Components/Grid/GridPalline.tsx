@@ -29,18 +29,14 @@ export default function GridPalline() {
     const [color, setColor] = useColor("#561ecb");                          //Palette
     const [colorStory,setColorStory] = useState<IColor[]>([]);              //List of color used
 
-
     const [dijkstra,setPoints] = useState(dijkstraPoints);                   //START AND END FOR MAZE
     const [isSetWall,setWalls] = useState(false);                           // WALL MODE
-  
-
     const [pallinaOrientation,setPallinaOrientation] = useState(true);
 
     function handleLoadImage(img:string[][]){
         setColorStory(countColors(img));
         setMatrix(LoadUtils.loadImg(img));
     }
-
 
     function handleSetDijkstra(s?:number[],f?:number[]){
         if(f){

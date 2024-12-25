@@ -42,6 +42,7 @@ function GridComponent({ pushColor, pushComplexOperation, color, isSetWall, hand
     }
 
     function handleClick(e: any, i: number, j: number) {
+        console.log(gridState)
         if (gridState === grid.fill) {
             let alg = new FloodFillAlgorithm();
             let [filledMatrix, oper] = alg.bfs(matrix.length, matrix[0].length, [...matrix], i, j, color.hex, isSetWall);

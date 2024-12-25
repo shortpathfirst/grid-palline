@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import GridPalline from '../Grid/GridPalline';
 import Welcome from './Welcome';
 import { MatrixProvider } from '../../hooks/MatrixProvider';
+import { GridStateProvider } from '../../hooks/GridStateHook';
 
 
 function LoadingScreen() {
@@ -21,7 +22,9 @@ function LoadingScreen() {
   return (
     <div>
       <MatrixProvider>
-        <GridPalline />
+        <GridStateProvider>
+          <GridPalline />
+        </GridStateProvider>
       </MatrixProvider>
 
     </div>
