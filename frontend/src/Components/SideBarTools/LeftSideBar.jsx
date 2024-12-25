@@ -2,7 +2,7 @@ import React, { useReducer } from 'react';
 import { Sidebar, Menu, MenuItem, SubMenu } from 'react-pro-sidebar';
 import { HiMenuAlt2 } from 'react-icons/hi';
 import { SlWrench } from 'react-icons/sl';
-import { GiPaintBucket } from 'react-icons/gi';
+// import { GiPaintBucket } from 'react-icons/gi';
 import { MdScreenRotation } from 'react-icons/md';
 import { FaUndo } from 'react-icons/fa';
 import { BsGrid3X3Gap } from 'react-icons/bs';
@@ -15,12 +15,12 @@ import ControlTools from './Tools/ControllTools/ControlTools';
 import FileSelector from './Tools/ControllTools/FileSelector';
 import { useMatrixContext } from '../../hooks/MatrixProvider';
 import RandomImageButton from './Tools/RandomImageMenuButton';
+import { RotateUtils } from '../../Controller/Utils/RotateUtils';
 
 const initialState = {
   collapsed: false,
   isEraser: false,
   floodFill: false,
-  gridState: {},
   isWall: false,
 };
 
@@ -32,8 +32,6 @@ function reducer(state, action) {
       return { ...state, isEraser: action.payload };
     case 'TOGGLE_FLOOD_FILL':
       return { ...state, floodFill: !state.floodFill };
-    case 'SET_GRID_STATE':
-      return { ...state, gridState: action.payload };
     case 'SET_IS_WALL':
       return { ...state, isWall: action.payload };
     default:
@@ -42,24 +40,22 @@ function reducer(state, action) {
 }
 
 function LeftSideBar({
-  onEraser,
-  isEraser,
-  onChangeStart,
   onSetWalls,
-  onFloodFill,
   onPrevState,
-  onRotate,
   onClear,
-  gridState,
   isWall,
-  floodFill,
   operationList,
   dijkstra,
   handleLoadImage,
   handleRotatePallina,
 }) {
   const [state, dispatch] = useReducer(reducer, initialState); // Use useReducer for state management
-  const {matrix} = useMatrixContext();
+  const { matrix, setMatrix } = useMatrixContext();
+
+  const rotateMatrix = () => {
+    setMatrix(RotateUtils.rotateMatrix(matrix));
+  }
+
 
   // <input multiple TO ACCEPT MULTIPLE FILE
   function download() {
@@ -113,13 +109,13 @@ function LeftSideBar({
                 icon={<HiMenuAlt2 className="logo-burger" />}
                 onClick={() => dispatch({ type: 'TOGGLE_COLLAPSE' })}
               ></MenuItem>
-              <MenuItem
+              {/* <MenuItem
                 icon={<GiPaintBucket />}
                 onClick={onFloodFill}
                 style={floodFillStyle}
-              />
+              /> */}
               <MenuItem icon={<FaUndo />} onClick={onPrevState} />
-              <MenuItem icon={<MdScreenRotation />} onClick={onRotate} />
+              <MenuItem icon={<MdScreenRotation />} onClick={rotateMatrix} />
               <MenuItem icon={eraser}></MenuItem>
             </main>
           ) : (
@@ -132,9 +128,7 @@ function LeftSideBar({
               ></MenuItem>
 
               <MazeTools
-                onChangeStart={onChangeStart}
                 onSetWalls={onSetWalls}
-                gridState={gridState}
                 isWall={isWall}
                 operationList={operationList}
                 dijkstra={dijkstra}
@@ -142,22 +136,17 @@ function LeftSideBar({
 
               <ControlTools
                 onDownload={download}
-                onEraser={onEraser}
                 onPrevState={onPrevState}
-                onFloodFill={onFloodFill}
-                floodFill={floodFill}
-                onRotate={onRotate}
                 handleRotatePallina={handleRotatePallina}
-                isEraser={isEraser}
                 onClear={onClear}
                 floodFillStyle={floodFillStyle}
               ></ControlTools>
 
               <SubMenu label={'Grid size'} icon={<BsGrid3X3Gap />} defaultOpen={true}>
-              {/* Grid Size Menu */}
-              <GridSetting/>
+                {/* Grid Size Menu */}
+                <GridSetting />
               </SubMenu>
-              <MenuItem onClick={onRotate} icon={<MdScreenRotation />}>
+              <MenuItem onClick={rotateMatrix} icon={<MdScreenRotation />}>
                 ROTATE
               </MenuItem>
               <MenuItem onClick={handleRotatePallina} icon={<MdScreenRotation />}>

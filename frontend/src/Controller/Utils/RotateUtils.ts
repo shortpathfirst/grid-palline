@@ -10,9 +10,9 @@ export class RotateUtils{
     for(let i=0;i<heigth;i++){
         let currentRow:Node[]= [];
         for(let j=0;j<width;j++){
-            let a = new Node(i,j);
-            a.value = matrix[matrix.length-1-j][i].value;
-            currentRow.push(a);
+            let newNode = new Node(i,j);
+            newNode.value = matrix[matrix.length-1-j][i].value;
+            currentRow.push(newNode);
         }
         newMatrix.push(currentRow);
     }

@@ -4,18 +4,14 @@ import { IColor, useColor } from "react-color-palette";
 import "react-color-palette/css";
 import { Grid } from '../../model/Grid';
 import {countColors} from '../../Controller/Utils/imgUtils';
-import { RotateUtils } from '../../Controller/Utils/RotateUtils';
 import { LoadUtils } from '../../Controller/Utils/LoadUtils';
 import ColorStory from '../ColorStory/ColorStory';
-import { grid } from '../../model/GridStatus';
 import GridComponent from './GridComponent';
 import RightSideBar from '../SideBarTools/RightSideBar';
 import LeftSideBar from '../SideBarTools/LeftSideBar';
 import { OperationOnGrid } from '../../Controller/OperationOnGrid';
 import { useMatrixContext } from '../../hooks/MatrixProvider';
 import { changeMatrix } from '../../Service/MatrixService';
-
-
 
 let operationList:OperationOnGrid[] = [];
 
@@ -36,7 +32,7 @@ export default function GridPalline() {
 
     const [dijkstra,setPoints] = useState(dijkstraPoints);                   //START AND END FOR MAZE
     const [isSetWall,setWalls] = useState(false);                           // WALL MODE
-    const [gridState,setGridState] = useState(grid.draw);                   //Grid state 
+  
 
     const [pallinaOrientation,setPallinaOrientation] = useState(true);
 
@@ -69,24 +65,8 @@ export default function GridPalline() {
         }
         setColorStory([...colorStory,color]);
     }
-    function rotateImage(){
-        setMatrix(RotateUtils.rotateMatrix(matrix));
-    }
-    function floodFill(){
-        if(gridState === grid.fill)
-            setGridState(grid.draw)
-        else
-            setGridState(grid.fill)
-    }
-    function switchEraser(){
-        if(gridState === grid.eraser){
-            setGridState(grid.draw)
+ 
 
-        }
-        else{
-            setGridState(grid.eraser)
-        }
-    }
 ////////////////////////////////////////////////////////
 ////////////      operations      //////////////////////
     function pushOperation(operation:OperationOnGrid){ 
@@ -120,19 +100,12 @@ export default function GridPalline() {
     <>
     <div className='container' >
         <LeftSideBar
-            onEraser ={()=>switchEraser()}
-            isEraser={gridState===grid.eraser}
-            onRotate ={() => rotateImage()}
             onClear ={()=>handleClear()}
             operationList={operationList}
             dijkstra={dijkstra}
-            onFloodFill ={()=>floodFill()}
             onPrevState ={()=>handlePrevState()}
             onSetWalls ={()=>setWalls(!isSetWall)}
-            onChangeStart ={()=>setGridState(gridState===-1?grid.start:grid.draw)}
-            gridState={gridState}
             isWall={isSetWall}
-            floodFill={gridState===grid.fill}
             handleLoadImage={handleLoadImage}
             handleRotatePallina = {()=>setPallinaOrientation(!pallinaOrientation)}
             ></LeftSideBar>
@@ -141,8 +114,6 @@ export default function GridPalline() {
         <ColorStory colorStory={colorStory} setColorStory={setColorStory} setColor={setColor}></ColorStory>
 
         <GridComponent 
-        gridState={gridState} 
-        setGridState={setGridState} 
         pushColor={pushColor} 
         color={color} 
         handleSetDijkstra={handleSetDijkstra} 

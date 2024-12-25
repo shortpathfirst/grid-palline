@@ -10,16 +10,19 @@ import { dijkstraOperation } from '../../../Controller/dijkstraOperation';
 import { Dijkstra } from '../../../Algorithm/Dijkstra';
 import { useMatrixContext } from '../../../hooks/MatrixProvider';
 import { changeMatrix } from '../../../Service/MatrixService';
+import { useGridState } from '../../../hooks/GridStateHook';
+import { grid } from '../../../model/GridStatus';
 
 function MazeTools({
   onSetWalls,//state
-  onChangeStart,//state
-  gridState,//state
   isWall,//state
   dijkstra,
   operationList,
 }) {
     const {matrix,setMatrix} = useMatrixContext();
+    const {gridState,setGridState} = useGridState();
+    const onChangeStart =()=>setGridState(gridState===-1?grid.start:grid.draw)
+
     const styles = {
       dijkstraColor :"#aee4ac",
       dijkstraPath : '#cb4d1e',
