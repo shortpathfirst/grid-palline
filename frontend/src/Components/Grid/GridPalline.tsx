@@ -13,7 +13,7 @@ import GridComponent from './GridComponent';
 import RightSideBar from '../SideBarTools/RightSideBar';
 import LeftSideBar from '../SideBarTools/LeftSideBar';
 import { OperationOnGrid } from '../../Controller/OperationOnGrid';
-import { Node } from '../../model/Node';
+import { useMatrixContext } from '../../hooks/MatrixProvider';
 
 
 let operationList:OperationOnGrid[] = [];
@@ -27,7 +27,7 @@ const dijkstraPoints ={
 
 export default function GridPalline() {
 
-    const [matrix,setMatrix] = useState(Grid.createNodes(50,18));            //Grid matrix
+    const {matrix,setMatrix} = useMatrixContext();
 
     const [dijkstra,setPoints] = useState(dijkstraPoints);                   //START AND END FOR MAZE
     const [isSetWall,setWalls] = useState(false);                           // WALL MODE
@@ -140,9 +140,6 @@ export default function GridPalline() {
         operationList=[];
     }
 
-    const handlerMatrixState = (data:Node[][]) => {
-        setMatrix(data);
-    }
   return (
     <>
     <div className='container' >
@@ -157,8 +154,6 @@ export default function GridPalline() {
             dijkstra={dijkstra}
             onFloodFill ={()=>floodFill()}
             onPrevState ={()=>handlePrevState()}
-            matrix={matrix}
-            setMatrix={handlerMatrixState}
             onSetWalls ={()=>setWalls(!isSetWall)}
             onChangeStart ={()=>setGridState(gridState===-1?grid.start:grid.draw)}
             gridState={gridState}
@@ -172,8 +167,6 @@ export default function GridPalline() {
         <ColorStory colorStory={colorStory} setColorStory={setColorStory} setColor={setColor}></ColorStory>
 
         <GridComponent 
-        matrix={matrix} 
-        setMatrix={handlerMatrixState} 
         gridState={gridState} 
         setGridState={setGridState} 
         pushColor={pushColor} 

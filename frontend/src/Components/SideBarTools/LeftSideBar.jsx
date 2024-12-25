@@ -13,12 +13,12 @@ import '../../styles/sidebars.css';
 import { arrayToImg } from '../../Controller/Utils/imgUtils';
 import ControlTools from './Tools/ControllTools/ControlTools';
 import FileSelector from './Tools/ControllTools/FileSelector';
+import { useMatrixContext } from '../../hooks/MatrixProvider';
 
 const initialState = {
   collapsed: false,
   isEraser: false,
   floodFill: false,
-  matrix: [],
   gridState: {},
   isWall: false,
 };
@@ -50,8 +50,6 @@ function LeftSideBar({
   onPrevState,
   onRotate,
   onClear,
-  matrix,
-  setMatrix,
   gridState,
   isWall,
   floodFill,
@@ -62,6 +60,7 @@ function LeftSideBar({
   handleRotatePallina,
 }) {
   const [state, dispatch] = useReducer(reducer, initialState); // Use useReducer for state management
+  const {matrix} = useMatrixContext();
 
   // <input multiple TO ACCEPT MULTIPLE FILE
   function download() {
@@ -147,8 +146,6 @@ function LeftSideBar({
                 operationList={operationList}
                 changeMatrix={changeMatrix}
                 dijkstra={dijkstra}
-                matrix={matrix}
-                setMatrix={setMatrix}
               />
 
               <ControlTools
@@ -166,8 +163,6 @@ function LeftSideBar({
 
               <SubMenu label={'Grid size'} icon={<BsGrid3X3Gap />} defaultOpen={true}>
                 <GridSetting
-                  matrix={matrix}
-                  setMatrix={setMatrix}
                   onRotate={onRotate}
                   onClear={onClear}
                 />

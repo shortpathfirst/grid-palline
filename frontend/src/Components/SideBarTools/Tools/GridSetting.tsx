@@ -1,10 +1,12 @@
 import React from 'react'
 import '../../../styles/gridSetting.css'
 import { Node } from '../../../model/Node';
+import { useMatrixContext } from '../../../hooks/MatrixProvider';
 
-function GridSetting({matrix,setMatrix}:{matrix:Node[][],setMatrix:Function}) {
+function GridSetting() {
 
-
+  const {matrix,setMatrix} = useMatrixContext();
+  
   function addLine(){
     let newMatrix:Node[]= []
 

@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import GridPalline from '../Grid/GridPalline';
 import Welcome from './Welcome';
+import { MatrixProvider } from '../../hooks/MatrixProvider';
 
 
-function MyComponent() {
+function LoadingScreen() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -19,9 +20,12 @@ function MyComponent() {
 
   return (
     <div>
-      <GridPalline/>
+      <MatrixProvider>
+        <GridPalline />
+      </MatrixProvider>
+
     </div>
   );
 }
 
-export default MyComponent;
+export default LoadingScreen;

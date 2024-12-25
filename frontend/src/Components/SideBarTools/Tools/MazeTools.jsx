@@ -8,19 +8,18 @@ import { FaFlagCheckered } from "react-icons/fa6";
 import { FaFontAwesomeFlag } from "react-icons/fa";
 import { dijkstraOperation } from '../../../Controller/dijkstraOperation';
 import { Dijkstra } from '../../../Algorithm/Dijkstra';
+import { useMatrixContext } from '../../../hooks/MatrixProvider';
 
 function MazeTools({
   onSetWalls,//state
   onChangeStart,//state
   gridState,//state
   isWall,//state
-  matrix,
   changeMatrix,
   dijkstra,
   operationList,
-  setMatrix
 }) {
-
+    const {matrix,setMatrix} = useMatrixContext();
     const styles = {
       dijkstraColor :"#aee4ac",
       dijkstraPath : '#cb4d1e',
