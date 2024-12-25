@@ -15,11 +15,13 @@ import { changeMatrix } from '../../Service/MatrixService';
 
 let operationList:OperationOnGrid[] = [];
 
-const dijkstraPoints ={
-    START_NODE_ROW : 10,
-    START_NODE_COL : 15, //TO CHECK IN MATRIX
-    FINISH_NODE_ROW : 10,
-    FINISH_NODE_COL : 25,
+type DijkstraPoints = {
+    START_NODE:[number,number],
+    FINISH_NODE:[number,number],
+}
+const DefaultDijkstraPoints:DijkstraPoints ={
+    START_NODE : [10,15],
+    FINISH_NODE :[10,25], 
 }
 
 export default function GridPalline() {
@@ -29,7 +31,7 @@ export default function GridPalline() {
     const [color, setColor] = useColor("#561ecb");                          //Palette
     const [colorStory,setColorStory] = useState<IColor[]>([]);              //List of color used
 
-    const [dijkstra,setPoints] = useState(dijkstraPoints);                   //START AND END FOR MAZE
+    const [dijkstraPoints,setDijkstraPoints] = useState(DefaultDijkstraPoints);                   //START AND END FOR MAZE
     const [isSetWall,setWalls] = useState(false);                           // WALL MODE
     const [pallinaOrientation,setPallinaOrientation] = useState(true);
 
@@ -38,19 +40,17 @@ export default function GridPalline() {
         setMatrix(LoadUtils.loadImg(img));
     }
 
-    function handleSetDijkstra(s?:number[],f?:number[]){
+    function handleSetDijkstra(s?:[number,number],f?:[number,number]){
         if(f){
-        setPoints({
-            ...dijkstra, 
-            FINISH_NODE_ROW: f[0],
-            FINISH_NODE_COL: f[1] 
+            setDijkstraPoints({
+            ...dijkstraPoints, 
+            FINISH_NODE: f,
           });
         }
         if(s){
-        setPoints({
-            ...dijkstra, 
-            START_NODE_ROW: s[0],
-            START_NODE_COL: s[1]
+            setDijkstraPoints({
+            ...dijkstraPoints, 
+            START_NODE: s,
             });
         }
     }
@@ -98,7 +98,7 @@ export default function GridPalline() {
         <LeftSideBar
             onClear ={()=>handleClear()}
             operationList={operationList}
-            dijkstra={dijkstra}
+            dijkstraPoints={dijkstraPoints}
             onPrevState ={()=>handlePrevState()}
             onSetWalls ={()=>setWalls(!isSetWall)}
             isWall={isSetWall}

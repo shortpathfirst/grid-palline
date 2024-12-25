@@ -16,7 +16,7 @@ import { grid } from '../../../model/GridStatus';
 function MazeTools({
   onSetWalls,//state
   isWall,//state
-  dijkstra,
+  dijkstraPoints,
   operationList,
 }) {
     const {matrix,setMatrix} = useMatrixContext();
@@ -27,7 +27,8 @@ function MazeTools({
       dijkstraColor :"#aee4ac",
       dijkstraPath : '#cb4d1e',
       WallStyle:isWall?{backgroundColor:"#9f8dc6"}:{},
-      startstyle : gridState===0?<Bs1Circle />:gridState===1?<FaFlagCheckered />:<FaFontAwesomeFlag />,
+      startstyle : gridState===0?<Bs1Circle />:
+      gridState===1?<FaFlagCheckered />:<FaFontAwesomeFlag />,
     };
 
     function resetParams(){
@@ -84,8 +85,8 @@ function MazeTools({
       operationList.push(dijkstraOperationList);
   }
   function visualizeDijkstra(){
-      const startNode = matrix[dijkstra.START_NODE_ROW][dijkstra.START_NODE_COL];
-      const finishNode = matrix[dijkstra.FINISH_NODE_ROW][dijkstra.FINISH_NODE_COL];
+      const startNode = matrix[dijkstraPoints.START_NODE[0]][dijkstraPoints.START_NODE[1]];
+      const finishNode = matrix[dijkstraPoints.FINISH_NODE[0]][dijkstraPoints.FINISH_NODE[1]];
       const algorithm = new Dijkstra();
       const visitedNodes = algorithm.dijkstra(matrix,startNode,finishNode); //NEED TO RESET THE NODES OF THE MATRIX
       const nodesInshortestPath = algorithm.getNodesInShortestPathOrder(finishNode);

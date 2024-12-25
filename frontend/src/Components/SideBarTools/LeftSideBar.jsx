@@ -45,7 +45,7 @@ function LeftSideBar({
   onClear,
   isWall,
   operationList,
-  dijkstra,
+  dijkstraPoints,
   handleLoadImage,
   handleRotatePallina,
 }) {
@@ -131,7 +131,7 @@ function LeftSideBar({
                 onSetWalls={onSetWalls}
                 isWall={isWall}
                 operationList={operationList}
-                dijkstra={dijkstra}
+                dijkstraPoints={dijkstraPoints}
               />
 
               <ControlTools
