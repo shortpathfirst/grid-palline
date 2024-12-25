@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from 'react'
+import {  useState } from 'react'
 import '../../styles/grid.css'
 import { IColor, useColor } from "react-color-palette";
 import "react-color-palette/css";
 import { Grid } from '../../model/Grid';
-import { fetchRandomImage } from "../../Service/imgService";
 import {countColors} from '../../Controller/Utils/imgUtils';
 import { RotateUtils } from '../../Controller/Utils/RotateUtils';
 import { LoadUtils } from '../../Controller/Utils/LoadUtils';
@@ -29,25 +28,17 @@ export default function GridPalline() {
 
     const {matrix,setMatrix} = useMatrixContext();
 
+    const [color, setColor] = useColor("#561ecb");                          //Palette
+    const [colorStory,setColorStory] = useState<IColor[]>([]);              //List of color used
+
+
     const [dijkstra,setPoints] = useState(dijkstraPoints);                   //START AND END FOR MAZE
     const [isSetWall,setWalls] = useState(false);                           // WALL MODE
     const [gridState,setGridState] = useState(grid.draw);                   //Grid state 
 
-    const [color, setColor] = useColor("#561ecb");                          //Palette
-    const [colorStory,setColorStory] = useState<IColor[]>([]);              //List of color used
-    const [currentImg,setCurrentImg] = useState<string[][]>([[]])
+    
     const [pallinaOrientation,setPallinaOrientation] = useState(true);
 
-    useEffect(() => {
-    },[currentImg])//add listener 1 time only
-
-    function getRandomImg(){
-        fetchRandomImage().then(img => {
-            setCurrentImg(img.data);
-            handleLoadImage(img.data);
-            
-         });
-    }
     function handleLoadImage(img:string[][]){
         setColorStory(countColors(img));
         setMatrix(LoadUtils.loadImg(img));
@@ -146,7 +137,6 @@ export default function GridPalline() {
         <LeftSideBar
             onEraser ={()=>switchEraser()}
             isEraser={gridState===grid.eraser}
-            onRandomImage ={()=>getRandomImg()}
             onRotate ={() => rotateImage()}
             onClear ={()=>handleClear()}
             operationList={operationList}

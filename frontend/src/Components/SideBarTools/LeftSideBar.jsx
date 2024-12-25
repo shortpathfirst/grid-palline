@@ -14,6 +14,7 @@ import { arrayToImg } from '../../Controller/Utils/imgUtils';
 import ControlTools from './Tools/ControllTools/ControlTools';
 import FileSelector from './Tools/ControllTools/FileSelector';
 import { useMatrixContext } from '../../hooks/MatrixProvider';
+import RandomImageButton from './Tools/RandomImageMenuButton';
 
 const initialState = {
   collapsed: false,
@@ -43,7 +44,6 @@ function reducer(state, action) {
 function LeftSideBar({
   onEraser,
   isEraser,
-  onRandomImage,
   onChangeStart,
   onSetWalls,
   onFloodFill,
@@ -69,13 +69,7 @@ function LeftSideBar({
 
   const floodFillStyle = state.floodFill ? { backgroundColor: '#9f8dc6' } : {};
 
-  const rndImageStyle = {
-    display: 'none', // CURRENTLY HIDDEN
-    background: 'conic-gradient(from 45deg,red,yellow,lime,aqua,blue,magenta,red)',
-    fontSize: '1.4rem',
-    fontWeight: 'bolder',
-    marginTop: '2rem',
-  };
+
 
   const styles = {
     sidebarBackground: 'rgb(214, 201, 223)',
@@ -175,9 +169,7 @@ function LeftSideBar({
               </MenuItem>
               <FileSelector handleLoadImage={handleLoadImage}></FileSelector>
 
-              <MenuItem onClick={onRandomImage} style={rndImageStyle}>
-                RandomImage
-              </MenuItem>
+              <RandomImageButton></RandomImageButton>
             </main>
           )}
         </Menu>
