@@ -28,12 +28,12 @@ export default function GridPalline() {
 
     const {matrix,setMatrix} = useMatrixContext();
 
-    const [color, setColor] = useColor("#561ecb");                          //Palette
-    const [colorStory,setColorStory] = useState<IColor[]>([]);              //List of color used
+    const [color, setColor] = useColor("#561ecb");                                  // Current ColorPalette
+    const [colorStory,setColorStory] = useState<IColor[]>([]);                      // List of color used
 
-    const [dijkstraPoints,setDijkstraPoints] = useState(DefaultDijkstraPoints);                   //START AND END FOR MAZE
-    const [isSetWall,setWalls] = useState(false);                           // WALL MODE
-    const [pallinaOrientation,setPallinaOrientation] = useState(true);
+    const [dijkstraPoints,setDijkstraPoints] = useState(DefaultDijkstraPoints);     // START AND END FOR MAZE
+    const [isSetWall,setWalls] = useState(false);                                   // WALL MODE
+    const [pallinaOrientation,setPallinaOrientation] = useState(true);              // Pallina Orientation
 
     function handleLoadImage(img:string[][]){
         setColorStory(countColors(img));

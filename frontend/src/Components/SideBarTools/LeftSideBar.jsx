@@ -1,21 +1,22 @@
-import React, { useReducer } from 'react';
+import { useReducer } from 'react';
+import '../../styles/sidebars.css';
 import { Sidebar, Menu, MenuItem, SubMenu } from 'react-pro-sidebar';
 import { HiMenuAlt2 } from 'react-icons/hi';
 import { SlWrench } from 'react-icons/sl';
-// import { GiPaintBucket } from 'react-icons/gi';
+import { GiPaintBucket } from 'react-icons/gi';
 import { MdScreenRotation } from 'react-icons/md';
 import { FaUndo } from 'react-icons/fa';
 import { BsGrid3X3Gap } from 'react-icons/bs';
 import logo from '../../Assets/Eraser_icon.svg';
 import GridSetting from './Tools/GridSizeSetting';
 import MazeTools from './Tools/MazeTools';
-import '../../styles/sidebars.css';
-import { arrayToImg } from '../../Controller/Utils/imgUtils';
 import ControlTools from './Tools/ControllTools/ControlTools';
 import FileSelector from './Tools/ControllTools/FileSelector';
 import { useMatrixContext } from '../../hooks/MatrixProvider';
 import RandomImageButton from './Tools/RandomImageMenuButton';
 import { RotateUtils } from '../../Controller/Utils/RotateUtils';
+import { useGridState } from '../../hooks/GridStateHook';
+import { grid } from '../../model/GridStatus';
 
 const initialState = {
   collapsed: false,
@@ -51,20 +52,16 @@ function LeftSideBar({
 }) {
   const [state, dispatch] = useReducer(reducer, initialState); // Use useReducer for state management
   const { matrix, setMatrix } = useMatrixContext();
-
+  const { gridState, setGridState } = useGridState()
   const rotateMatrix = () => {
     setMatrix(RotateUtils.rotateMatrix(matrix));
   }
 
 
-  // <input multiple TO ACCEPT MULTIPLE FILE
-  function download() {
-    arrayToImg(matrix);
+  function handleFloodFill() {
+    setGridState(prev => prev === grid.fill ? grid.draw : grid.fill)
   }
-
-  const floodFillStyle = state.floodFill ? { backgroundColor: '#9f8dc6' } : {};
-
-
+  const floodFillStyle = gridState === grid.fill ? { backgroundColor: '#9f8dc6' } : {};
 
   const styles = {
     sidebarBackground: 'rgb(214, 201, 223)',
@@ -109,11 +106,11 @@ function LeftSideBar({
                 icon={<HiMenuAlt2 className="logo-burger" />}
                 onClick={() => dispatch({ type: 'TOGGLE_COLLAPSE' })}
               ></MenuItem>
-              {/* <MenuItem
+              <MenuItem
                 icon={<GiPaintBucket />}
-                onClick={onFloodFill}
+                onClick={handleFloodFill}
                 style={floodFillStyle}
-              /> */}
+              />
               <MenuItem icon={<FaUndo />} onClick={onPrevState} />
               <MenuItem icon={<MdScreenRotation />} onClick={rotateMatrix} />
               <MenuItem icon={eraser}></MenuItem>
@@ -135,7 +132,6 @@ function LeftSideBar({
               />
 
               <ControlTools
-                onDownload={download}
                 onPrevState={onPrevState}
                 handleRotatePallina={handleRotatePallina}
                 onClear={onClear}
