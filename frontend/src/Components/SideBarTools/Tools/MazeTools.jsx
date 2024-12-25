@@ -15,7 +15,6 @@ function MazeTools({
   onChangeStart,//state
   gridState,//state
   isWall,//state
-  changeMatrix,
   dijkstra,
   operationList,
 }) {
@@ -54,7 +53,7 @@ function MazeTools({
           }
           const node = visitedNodes[i];
           setTimeout(() => {
-              changeMatrix(node.row,node.col,styles.dijkstraColor);
+              setMatrix(changeMatrix(matrix,node.row,node.col,styles.dijkstraColor));
           }, 10 * i);
           dijkstraOperationList.addOperation({
               i:node.row,

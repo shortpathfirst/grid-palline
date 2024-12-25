@@ -13,6 +13,8 @@ import RightSideBar from '../SideBarTools/RightSideBar';
 import LeftSideBar from '../SideBarTools/LeftSideBar';
 import { OperationOnGrid } from '../../Controller/OperationOnGrid';
 import { useMatrixContext } from '../../hooks/MatrixProvider';
+import { changeMatrix } from '../../Service/MatrixService';
+
 
 
 let operationList:OperationOnGrid[] = [];
@@ -44,23 +46,7 @@ export default function GridPalline() {
         setMatrix(LoadUtils.loadImg(img));
     }
 
-    function changeMatrix(iIndex:number,jIndex:number,value?:string,isWall?:boolean){
-        let copy = matrix.map((row,i)=>{
-            row.map((n,j)=>{
-                if(iIndex===i && jIndex===j){
-                    if(value || value ==='')
-                        matrix[i][j].value=value;
-                    
-                        matrix[i][j].isWall=isWall!; //may cause error
 
-                    return  matrix[i][j]; // need to make a copy of the node
-                }
-                return n;
-            })
-            return row;
-        })
-        setMatrix(copy);
-    }
     function handleSetDijkstra(s?:number[],f?:number[]){
         if(f){
         setPoints({
@@ -114,13 +100,13 @@ export default function GridPalline() {
             let complexOne = lastoperation.undoOperation();
             if(complexOne.length>1){
                 for(let el of complexOne)
-                    changeMatrix(el.i,el.j,el.prevColor);//MISSING PROPERTIES
+                    setMatrix(changeMatrix(matrix,el.i,el.j,el.prevColor));//MISSING PROPERTIES
                 return;
             }
             let simpleOne = complexOne[0];
             let i = simpleOne.i;
             let j = simpleOne.j
-            changeMatrix(i,j,simpleOne.prevColor,false) //O(10n) with map is O(n)
+            setMatrix(changeMatrix(matrix,i,j,simpleOne.prevColor,false)) //O(10n) with map is O(n)
             count++;
         }
 
@@ -140,7 +126,6 @@ export default function GridPalline() {
             onRotate ={() => rotateImage()}
             onClear ={()=>handleClear()}
             operationList={operationList}
-            changeMatrix={changeMatrix}
             dijkstra={dijkstra}
             onFloodFill ={()=>floodFill()}
             onPrevState ={()=>handlePrevState()}
@@ -164,7 +149,6 @@ export default function GridPalline() {
         handleSetDijkstra={handleSetDijkstra} 
         isSetWall={isSetWall}
         pushComplexOperation={pushOperation}
-        changeMatrix={changeMatrix}
         isVertical={pallinaOrientation}
         />
         <RightSideBar  color={color} setColor={setColor} />
@@ -173,4 +157,3 @@ export default function GridPalline() {
     </>
   )
 }
-

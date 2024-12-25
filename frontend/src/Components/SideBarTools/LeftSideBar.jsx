@@ -54,7 +54,6 @@ function LeftSideBar({
   isWall,
   floodFill,
   operationList,
-  changeMatrix,
   dijkstra,
   handleLoadImage,
   handleRotatePallina,
@@ -138,7 +137,7 @@ function LeftSideBar({
                 gridState={gridState}
                 isWall={isWall}
                 operationList={operationList}
-                changeMatrix={changeMatrix}
+  
                 dijkstra={dijkstra}
               />
 

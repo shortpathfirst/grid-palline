@@ -8,6 +8,7 @@ import { SimpleOperation } from '../../Controller/SimpleOperation';
 import { FloodFillOperation } from '../../Controller/FloodFillOperation';
 import { WallOperation } from '../../Controller/WallOperation';
 import { useMatrixContext } from '../../hooks/MatrixProvider';
+import { changeMatrix } from '../../Service/MatrixService';
 
 
 interface GridProps {
@@ -15,7 +16,6 @@ interface GridProps {
     color: IColor;       //Color to use
     isSetWall: boolean;  //Setting walls
     setGridState: Function;  //Make it handler
-    changeMatrix: Function;
     pushColor: Function;
     pushComplexOperation: Function;
     handleSetDijkstra: Function;
@@ -23,7 +23,7 @@ interface GridProps {
 
 }
 
-function GridComponent({ gridState, setGridState, pushColor, pushComplexOperation, color, isSetWall, changeMatrix, handleSetDijkstra, isVertical }: GridProps) {
+function GridComponent({ gridState, setGridState, pushColor, pushComplexOperation, color, isSetWall, handleSetDijkstra, isVertical }: GridProps) {
     const [draw, setDraw] = useState(false);           //Activate pen mouse up and mouse down
     const { matrix, setMatrix } = useMatrixContext();
 
@@ -59,14 +59,14 @@ function GridComponent({ gridState, setGridState, pushColor, pushComplexOperatio
         }
         if (gridState === grid.start) {
             addSimpleOperation({ i: i, j: j, color: "start", prevColor: matrix[i][j].value });
-            changeMatrix(i, j, '#01ff00');
+            setMatrix(changeMatrix(matrix,i, j, '#01ff00'));
             handleSetDijkstra([i, j]);
             setGridState(grid.finish);
             return;
         }
         if (gridState === grid.finish) {
             addSimpleOperation({ i: i, j: j, color: "finish", prevColor: matrix[i][j].value });
-            changeMatrix(i, j, '#fe0000');
+            setMatrix(changeMatrix(matrix,i, j, '#fe0000'));
             handleSetDijkstra(undefined, [i, j]);
             setGridState(grid.draw);
             return;
@@ -77,7 +77,7 @@ function GridComponent({ gridState, setGridState, pushColor, pushComplexOperatio
 
         let value = gridState === grid.eraser ? '' : color.hex;
         let isWall = gridState === grid.draw && isSetWall;
-        changeMatrix(i, j, value, isWall);
+        setMatrix(changeMatrix(matrix,i, j, value, isWall));
 
 
     }
@@ -93,7 +93,7 @@ function GridComponent({ gridState, setGridState, pushColor, pushComplexOperatio
             prevColor: matrix[i][j].value
         })
 
-        changeMatrix(i, j, '', false)
+        setMatrix(changeMatrix(matrix,i, j, '', false));
     }
 
     function handleHover(iClicked: number, jClicked: number) {
@@ -106,7 +106,7 @@ function GridComponent({ gridState, setGridState, pushColor, pushComplexOperatio
             });
             let value: string = gridState === grid.eraser ? '' : color.hex;
             let isWall: boolean = (matrix[iClicked][jClicked].value === color.hex || gridState === grid.draw) && isSetWall;
-            changeMatrix(iClicked, jClicked, value, isWall);
+            setMatrix(changeMatrix(matrix,iClicked, jClicked, value, isWall));
         }
     }
 
