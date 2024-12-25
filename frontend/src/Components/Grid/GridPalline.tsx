@@ -38,7 +38,6 @@ export default function GridPalline() {
     const [isSetWall,setWalls] = useState(false);                           // WALL MODE
     const [gridState,setGridState] = useState(grid.draw);                   //Grid state 
 
-    
     const [pallinaOrientation,setPallinaOrientation] = useState(true);
 
     function handleLoadImage(img:string[][]){

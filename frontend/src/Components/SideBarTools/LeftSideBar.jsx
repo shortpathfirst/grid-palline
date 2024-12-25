@@ -7,7 +7,7 @@ import { MdScreenRotation } from 'react-icons/md';
 import { FaUndo } from 'react-icons/fa';
 import { BsGrid3X3Gap } from 'react-icons/bs';
 import logo from '../../Assets/Eraser_icon.svg';
-import GridSetting from './Tools/GridSetting';
+import GridSetting from './Tools/GridSizeSetting';
 import MazeTools from './Tools/MazeTools';
 import '../../styles/sidebars.css';
 import { arrayToImg } from '../../Controller/Utils/imgUtils';
@@ -137,7 +137,6 @@ function LeftSideBar({
                 gridState={gridState}
                 isWall={isWall}
                 operationList={operationList}
-  
                 dijkstra={dijkstra}
               />
 
@@ -155,10 +154,8 @@ function LeftSideBar({
               ></ControlTools>
 
               <SubMenu label={'Grid size'} icon={<BsGrid3X3Gap />} defaultOpen={true}>
-                <GridSetting
-                  onRotate={onRotate}
-                  onClear={onClear}
-                />
+              {/* Grid Size Menu */}
+              <GridSetting/>
               </SubMenu>
               <MenuItem onClick={onRotate} icon={<MdScreenRotation />}>
                 ROTATE

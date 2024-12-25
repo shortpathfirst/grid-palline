@@ -9,6 +9,7 @@ import { FaFontAwesomeFlag } from "react-icons/fa";
 import { dijkstraOperation } from '../../../Controller/dijkstraOperation';
 import { Dijkstra } from '../../../Algorithm/Dijkstra';
 import { useMatrixContext } from '../../../hooks/MatrixProvider';
+import { changeMatrix } from '../../../Service/MatrixService';
 
 function MazeTools({
   onSetWalls,//state
@@ -69,7 +70,7 @@ function MazeTools({
       for (let i = 0; i < nodesInshortestPath.length; i++) {
       const node = nodesInshortestPath[i];
       setTimeout(() => {
-          changeMatrix(node.row,node.col,styles.dijkstraPath)
+        setMatrix(changeMatrix(matrix,node.row,node.col,styles.dijkstraPath));
       }, 50 * i);
       dijkstraOperationList.addOperation({
           i:node.row,
