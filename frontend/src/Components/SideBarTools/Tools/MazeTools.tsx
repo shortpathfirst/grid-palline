@@ -37,26 +37,24 @@ function MazeTools({ dijkstraPoints }: Props) {
   };
 
   function resetParams() {
-    let copy = matrix.map((row, i) => 
+    let copy = matrix.map((row, i) =>
       row.map((_, j) => {
         matrix[i][j].isVisited = false;
         matrix[i][j].distance = Infinity;
-
-        matrix[i][j].previousNode = undefined; //setting undefined
+        matrix[i][j].previousNode = undefined;
         matrix[i][j].isStart = false;
         matrix[i][j].isFinish = false;
         return matrix[i][j];
       })
-     );
+    );
     setMatrix(copy);
   }
-
-
 
   function animateDijkstra(visitedNodes: GridNode[], nodesInshortestPath: GridNode[]) {
     let dijkstraOperationList = new dijkstraOperation();
     for (let i = 0; i < visitedNodes.length; i++) {
-      if (i === visitedNodes.length - 1) { //Wait animation
+      //Wait animation
+      if (i === visitedNodes.length - 1) {
         setTimeout(() => {
           animateShortestPath(nodesInshortestPath);
         }, 10 * i);
@@ -66,6 +64,7 @@ function MazeTools({ dijkstraPoints }: Props) {
       setTimeout(() => {
         setMatrix(changeMatrix(matrix, node.row, node.col, styles.dijkstraColor));
       }, 10 * i);
+
       dijkstraOperationList.addOperation({
         i: node.row,
         j: node.col,
@@ -96,13 +95,12 @@ function MazeTools({ dijkstraPoints }: Props) {
     const startNode = matrix[dijkstraPoints.START_NODE[0]][dijkstraPoints.START_NODE[1]];
     const finishNode = matrix[dijkstraPoints.FINISH_NODE[0]][dijkstraPoints.FINISH_NODE[1]];
     const algorithm = new Dijkstra();
-    const visitedNodes = algorithm.dijkstra(matrix, startNode, finishNode); //NEED TO RESET THE NODES OF THE MATRIX
+    const visitedNodes = algorithm.dijkstra(matrix, startNode, finishNode);
     const nodesInshortestPath = algorithm.getNodesInShortestPathOrder(finishNode);
-    animateDijkstra(visitedNodes!, nodesInshortestPath); //DO NOT FORCE !
+    if (!visitedNodes) return;
+    animateDijkstra(visitedNodes, nodesInshortestPath);
+    //NEED TO RESET THE NODES OF THE MATRIX
   }
-
-
-
 
   return (
     <SubMenu label={"Maze Game"} icon={<GiMaze />} defaultOpen={false} >

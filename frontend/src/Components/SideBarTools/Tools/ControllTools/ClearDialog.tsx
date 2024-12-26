@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -8,17 +8,19 @@ import DialogTitle from '@mui/material/DialogTitle';
 import { MenuItem } from 'react-pro-sidebar';
 import { GrClear } from "react-icons/gr";
 
-function ClearDialog({ onClear }) {
+const dialogBox = {
+  question:"Clear Board?",
+  description:"Are you sure? you will lose the work done.",
+  positive:"Yes,i'm sure",
+  negative:"No, go back",
+}
 
-  const [open, setOpen] = React.useState(false);
+function ClearDialog({ onClear }: { onClear: () => void }) {
 
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
+  const [open, setOpen] = useState(false);
 
-  const handleClose = () => {
-    setOpen(false);
-  };
+  const handleClickOpen = () => {setOpen(true);};
+  const handleClose = () => {setOpen(false);};
   const handleSuccessClose = () => {
     onClear();
     setOpen(false);
@@ -34,18 +36,16 @@ function ClearDialog({ onClear }) {
         aria-describedby="alert-dialog-description"
       >
         <DialogTitle id="alert-dialog-title">
-          {"Clear board?"}
+          {dialogBox.question}
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            Are you sure? you will lose the work done.
+            {dialogBox.description}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>No, go back</Button>
-          <Button onClick={handleSuccessClose} autoFocus>
-            Yes,i'm sure
-          </Button>
+          <Button onClick={handleClose}>{dialogBox.negative}</Button>
+          <Button onClick={handleSuccessClose} autoFocus> {dialogBox.positive}</Button>
         </DialogActions>
       </Dialog>
     </React.Fragment>

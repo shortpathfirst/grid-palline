@@ -46,8 +46,8 @@ export default function GridPalline() {
             });
         }
     }
-
-    function handleClear() {
+    const rotatePallina = () => setPallinaOrientation(!pallinaOrientation)
+    const handleClear = ()=>{
         setMatrix(Grid.createNodes(50, 18));
         setOperations([]);
     }
@@ -65,10 +65,10 @@ export default function GridPalline() {
         <>
             <div className='container' >
                 <LeftSideBar
-                    onClear={() => handleClear()}
+                    onClear={handleClear}
                     dijkstraPoints={dijkstraPoints}
                     handleLoadImage={handleLoadImage}
-                    handleRotatePallina={() => setPallinaOrientation(!pallinaOrientation)}
+                    handleRotatePallina={rotatePallina}
                 ></LeftSideBar>
 
 
