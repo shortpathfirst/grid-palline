@@ -16,12 +16,12 @@ import { useOperationsContext } from '../../hooks/OperationsHook';
 interface GridProps {
     color: IColor;       //Color to use
     isSetWall: boolean;  //Setting walls
-    pushColor: Function;
+    handleAddColor: Function;
     handleSetDijkstra: Function;
     isVertical: boolean;
 }
 
-function GridComponent({ pushColor, color, isSetWall, handleSetDijkstra, isVertical }: GridProps) {
+function GridComponent({ handleAddColor, color, isSetWall, handleSetDijkstra, isVertical }: GridProps) {
     const [draw, setDraw] = useState(false);           //Activate pen mouse up and mouse down
     const { matrix, setMatrix } = useMatrixContext();
     const { gridState, setGridState } = useGridState();
@@ -51,7 +51,7 @@ function GridComponent({ pushColor, color, isSetWall, handleSetDijkstra, isVerti
             complexOperation.addListOperations(oper);
             pushComplexOperations(complexOperation);
 
-            pushColor(color);
+            handleAddColor(color);
             setMatrix(filledMatrix);
             return;
         }
@@ -74,7 +74,7 @@ function GridComponent({ pushColor, color, isSetWall, handleSetDijkstra, isVerti
         }
         setDraw(true);
         addSimpleOperation({ i: i, j: j, color: gridState === grid.eraser ? '' : color.hex, prevColor: matrix[i][j].value });
-        if (gridState === grid.draw) pushColor(color);
+        if (gridState === grid.draw) handleAddColor(color);
 
         let value = gridState === grid.eraser ? '' : color.hex;
         let isWall = gridState === grid.draw && isSetWall;

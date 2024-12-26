@@ -3,20 +3,20 @@ import '../../styles/colorstory.css'
 import { useState } from 'react';
 type Props = {
   colorStory: IColor[];
-  setColorStory: React.Dispatch<React.SetStateAction<IColor[]>>;
-  setColor: React.Dispatch<React.SetStateAction<IColor>>;
+  handleRemoveColor: (color:IColor)=>void;
+  handleSetColor: (color:IColor)=>void;
 }
 
-function ColorStory({ colorStory, setColorStory, setColor }: Props) {
+function ColorStory({ colorStory, handleRemoveColor, handleSetColor }: Props) {
   const [activeColor, setActiveColor] = useState(0);
 
   const handleColorClick = (el: IColor, index: number) => {
     setActiveColor(index);
-    setColor(el);
+    handleSetColor(el);
   }
   const handleColorRightClick = (e: React.MouseEvent, el: IColor) => {
     e.preventDefault();
-    setColorStory(prev=> prev.filter(item => item !== el));
+    handleRemoveColor(el);
   }
   return (
     <div className='prevColorBox'>
