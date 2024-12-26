@@ -10,16 +10,17 @@ import { grid } from '../../../../model/GridStatus';
 import { arrayToImg } from '../../../../Controller/Utils/imgUtils';
 import { useMatrixContext } from '../../../../hooks/MatrixProvider';
 import { CSSProperties } from 'react';
+import { useOperationsContext } from '../../../../hooks/OperationsHook';
 
 type Props = {
   floodFillStyle: CSSProperties,
-  onPrevState:  ()=>void,
   onClear: ()=>void,
 }
-function ControlTools({ floodFillStyle, onPrevState, onClear }: Props) {
+function ControlTools({ floodFillStyle, onClear }: Props) {
   const { matrix } = useMatrixContext();
   const { gridState, setGridState } = useGridState();
-
+  const {undoOperations} = useOperationsContext();
+  
   function handleFloodFill() {
     setGridState(prev => prev === grid.fill ? grid.draw : grid.fill)
   }
@@ -36,7 +37,7 @@ function ControlTools({ floodFillStyle, onPrevState, onClear }: Props) {
   return (
     <SubMenu label={"Controls"} icon={<AiOutlineControl />} defaultOpen={true} >
       <MenuItem icon={<GiPaintBucket />} onClick={handleFloodFill} style={floodFillStyle}>FloodFill</MenuItem>
-      <MenuItem icon={<FaUndo />} onClick={onPrevState} >Undo</MenuItem>
+      <MenuItem icon={<FaUndo />} onClick={()=>undoOperations()} >Undo</MenuItem>
       <ClearDialog onClear={onClear}></ClearDialog>
       <MenuItem icon={eraser} onClick={switchEraser} >ERASER</MenuItem>
       <MenuItem icon={<MdDownload />} onClick={download} >DOWNLOAD</MenuItem>

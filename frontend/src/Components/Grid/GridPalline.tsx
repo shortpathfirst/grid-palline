@@ -9,11 +9,8 @@ import ColorStory from '../ColorStory/ColorStory';
 import GridComponent from './GridComponent';
 import RightSideBar from '../SideBarTools/RightSideBar';
 import LeftSideBar from '../SideBarTools/LeftSideBar';
-import { OperationOnGrid } from '../../Controller/OperationOnGrid';
 import { useMatrixContext } from '../../hooks/MatrixProvider';
-import { changeMatrix } from '../../Service/MatrixService';
-
-let operationList:OperationOnGrid[] = [];
+import { useOperationsContext } from '../../hooks/OperationsHook';
 
 type DijkstraPoints = {
     START_NODE:[number,number],
@@ -26,8 +23,8 @@ const DefaultDijkstraPoints:DijkstraPoints ={
 
 export default function GridPalline() {
 
-    const {matrix,setMatrix} = useMatrixContext();
-   
+    const {setMatrix} = useMatrixContext();
+    const {setOperations} = useOperationsContext();
     const [color, setColor] = useColor("#561ecb");                                  // Current ColorPalette
     const [colorStory,setColorStory] = useState<IColor[]>([]);                      // List of color used
 
@@ -61,35 +58,11 @@ export default function GridPalline() {
         }
         setColorStory([...colorStory,color]);
     }
- 
 
-////////////////////////////////////////////////////////
-////////////      operations      //////////////////////
-    function pushOperation(operation:OperationOnGrid){ 
-        operationList.push(operation);
-}
-    function handlePrevState(){
-        let count=0;
-        while(operationList.length>0 && (count <10)){
-            let lastoperation:OperationOnGrid = operationList.pop()!;
-            let complexOne = lastoperation.undoOperation();
-            if(complexOne.length>1){
-                for(let el of complexOne)
-                    setMatrix(changeMatrix(matrix,el.i,el.j,el.prevColor));//MISSING PROPERTIES
-                return;
-            }
-            let simpleOne = complexOne[0];
-            let i = simpleOne.i;
-            let j = simpleOne.j
-            setMatrix(changeMatrix(matrix,i,j,simpleOne.prevColor,false)) //O(10n) with map is O(n)
-            count++;
-        }
-
-    }
 
     function handleClear(){
         setMatrix(Grid.createNodes(50,18));
-        operationList=[];
+        setOperations([]);
     }
 
   return (
@@ -97,9 +70,7 @@ export default function GridPalline() {
     <div className='container' >
         <LeftSideBar
             onClear ={()=>handleClear()}
-            operationList={operationList}
             dijkstraPoints={dijkstraPoints}
-            onPrevState ={()=>handlePrevState()}
             onSetWalls ={()=>setWalls(!isSetWall)}
             isWall={isSetWall}
             handleLoadImage={handleLoadImage}
@@ -114,7 +85,6 @@ export default function GridPalline() {
         color={color} 
         handleSetDijkstra={handleSetDijkstra} 
         isSetWall={isSetWall}
-        pushComplexOperation={pushOperation}
         isVertical={pallinaOrientation}
         />
         <RightSideBar  color={color} setColor={setColor} />

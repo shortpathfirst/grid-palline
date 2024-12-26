@@ -10,22 +10,22 @@ import { WallOperation } from '../../Controller/WallOperation';
 import { useMatrixContext } from '../../hooks/MatrixProvider';
 import { changeMatrix } from '../../Service/MatrixService';
 import { useGridState } from '../../hooks/GridStateHook';
+import { useOperationsContext } from '../../hooks/OperationsHook';
 
 
 interface GridProps {
     color: IColor;       //Color to use
     isSetWall: boolean;  //Setting walls
     pushColor: Function;
-    pushComplexOperation: Function;
     handleSetDijkstra: Function;
     isVertical: boolean;
-
 }
 
-function GridComponent({ pushColor, pushComplexOperation, color, isSetWall, handleSetDijkstra, isVertical }: GridProps) {
+function GridComponent({ pushColor, color, isSetWall, handleSetDijkstra, isVertical }: GridProps) {
     const [draw, setDraw] = useState(false);           //Activate pen mouse up and mouse down
     const { matrix, setMatrix } = useMatrixContext();
     const { gridState, setGridState } = useGridState();
+    const {pushComplexOperations} = useOperationsContext();
 
     useEffect(() => {
         window.addEventListener('mouseup', () => { setDraw(false); }, false);
@@ -34,10 +34,10 @@ function GridComponent({ pushColor, pushComplexOperation, color, isSetWall, hand
     function addSimpleOperation(operation: Operation) {
         if (isSetWall) {//ADD WALL OPERATION
             let myOperation = new WallOperation(operation);
-            pushComplexOperation(myOperation);
+            pushComplexOperations(myOperation);
         } else {//ADD SIMPLE OPERATION
             let myOperation = new SimpleOperation(operation);
-            pushComplexOperation(myOperation);
+            pushComplexOperations(myOperation);
         }
     }
 
@@ -49,7 +49,7 @@ function GridComponent({ pushColor, pushComplexOperation, color, isSetWall, hand
 
             let complexOperation = new FloodFillOperation();
             complexOperation.addListOperations(oper);
-            pushComplexOperation(complexOperation);
+            pushComplexOperations(complexOperation);
 
             pushColor(color);
             setMatrix(filledMatrix);

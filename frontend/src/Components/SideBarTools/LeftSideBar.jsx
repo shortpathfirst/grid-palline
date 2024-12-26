@@ -17,6 +17,7 @@ import RandomImageButton from './Tools/RandomImageMenuButton';
 import { RotateUtils } from '../../Controller/Utils/RotateUtils';
 import { useGridState } from '../../hooks/GridStateHook';
 import { grid } from '../../model/GridStatus';
+import { useOperationsContext } from '../../hooks/OperationsHook';
 
 const initialState = {
   collapsed: false,
@@ -42,10 +43,8 @@ function reducer(state, action) {
 
 function LeftSideBar({
   onSetWalls,
-  onPrevState,
   onClear,
   isWall,
-  operationList,
   dijkstraPoints,
   handleLoadImage,
   handleRotatePallina,
@@ -53,6 +52,8 @@ function LeftSideBar({
   const [state, dispatch] = useReducer(reducer, initialState); // Use useReducer for state management
   const { matrix, setMatrix } = useMatrixContext();
   const { gridState, setGridState } = useGridState()
+  const {undoOperations} = useOperationsContext();
+
   const rotateMatrix = () => {
     setMatrix(RotateUtils.rotateMatrix(matrix));
   }
@@ -111,7 +112,7 @@ function LeftSideBar({
                 onClick={handleFloodFill}
                 style={floodFillStyle}
               />
-              <MenuItem icon={<FaUndo />} onClick={onPrevState} />
+              <MenuItem icon={<FaUndo />} onClick={()=>undoOperations()} />
               <MenuItem icon={<MdScreenRotation />} onClick={rotateMatrix} />
               <MenuItem icon={eraser}></MenuItem>
             </main>
@@ -127,12 +128,10 @@ function LeftSideBar({
               <MazeTools
                 onSetWalls={onSetWalls}
                 isWall={isWall}
-                operationList={operationList}
                 dijkstraPoints={dijkstraPoints}
               />
 
               <ControlTools
-                onPrevState={onPrevState}
                 handleRotatePallina={handleRotatePallina}
                 onClear={onClear}
                 floodFillStyle={floodFillStyle}

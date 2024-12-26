@@ -12,15 +12,17 @@ import { useMatrixContext } from '../../../hooks/MatrixProvider';
 import { changeMatrix } from '../../../Service/MatrixService';
 import { useGridState } from '../../../hooks/GridStateHook';
 import { grid } from '../../../model/GridStatus';
+import { useOperationsContext } from '../../../hooks/OperationsHook';
 
 function MazeTools({
   onSetWalls,//state
   isWall,//state
   dijkstraPoints,
-  operationList,
 }) {
     const {matrix,setMatrix} = useMatrixContext();
     const {gridState,setGridState} = useGridState();
+    const {pushOperations} = useOperationsContext();
+
     const onChangeStart =()=>setGridState(gridState===-1?grid.start:grid.draw)
 
     const styles = {
@@ -66,7 +68,7 @@ function MazeTools({
               color:'dijkstra',
               prevColor:matrix[node.row][node.col].value});
       }
-      operationList.push(dijkstraOperationList);
+      pushOperations(dijkstraOperationList)
       resetParams();
   }
   function animateShortestPath(nodesInshortestPath) {
@@ -82,7 +84,7 @@ function MazeTools({
           color:'dijkstra',
           prevColor:matrix[node.row][node.col].value});
       }
-      operationList.push(dijkstraOperationList);
+      pushOperations(dijkstraOperationList)
   }
   function visualizeDijkstra(){
       const startNode = matrix[dijkstraPoints.START_NODE[0]][dijkstraPoints.START_NODE[1]];
