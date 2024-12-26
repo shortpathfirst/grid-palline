@@ -20,12 +20,11 @@ export class GridNode{
     distance:number=Infinity;
     isVisited:boolean= false;
     isWall:boolean = false; 
-    previousNode:GridNode | undefined; //undefined default //only for dijkstra
+    previousNode:GridNode | null = null; //undefined default //only for dijkstra
 
     setDefaultParam(){
         this.distance = Infinity;
         this.isVisited = false;
-        //@ts-ignore //"strictNullChecks": true tsconfig
         this.previousNode = null;
     }
 }

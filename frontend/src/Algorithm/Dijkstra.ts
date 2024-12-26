@@ -53,7 +53,7 @@ export class Dijkstra {
 
     getNodesInShortestPathOrder(finishNode: GridNode) {
         const nodesInShortestPath = [];
-        let currentNode: GridNode | undefined = finishNode;
+        let currentNode: GridNode | null = finishNode;
         while (currentNode) {
             nodesInShortestPath.unshift(currentNode);
 

@@ -4,7 +4,6 @@ import { MdDownload } from "react-icons/md";
 import { GiPaintBucket } from "react-icons/gi";
 import { FaUndo } from "react-icons/fa";
 import ClearDialog from './ClearDialog';
-import logo from '../../../../Assets/Eraser_icon.svg';
 import { useGridState } from '../../../../hooks/GridStateHook';
 import { grid } from '../../../../model/GridStatus';
 import { arrayToImg } from '../../../../Controller/Utils/imgUtils';

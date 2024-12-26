@@ -41,7 +41,7 @@ function MazeTools({ dijkstraPoints }: Props) {
       row.map((_, j) => {
         matrix[i][j].isVisited = false;
         matrix[i][j].distance = Infinity;
-        matrix[i][j].previousNode = undefined;
+        matrix[i][j].previousNode = null;
         matrix[i][j].isStart = false;
         matrix[i][j].isFinish = false;
         return matrix[i][j];
