@@ -1,6 +1,7 @@
 import { useGridState } from "../../../hooks/GridStateHook";
-import logo from '../../../Assets/Eraser_icon.svg';
+import logo from '../../../assets/Eraser_icon.svg';
 import { grid } from "../../../model/GridStatus";
+
 type Props = {
     width: number,
     height: number,

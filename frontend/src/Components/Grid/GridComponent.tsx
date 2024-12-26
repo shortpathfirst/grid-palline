@@ -11,7 +11,7 @@ import { useMatrixContext } from '../../hooks/MatrixProvider';
 import { changeMatrix } from '../../Service/MatrixService';
 import { useGridState } from '../../hooks/GridStateHook';
 import { useOperationsContext } from '../../hooks/OperationsHook';
-
+import '../../styles/grid.css'
 
 interface GridProps {
     color: IColor;       //Color to use

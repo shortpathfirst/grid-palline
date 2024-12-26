@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import '../../styles/grid.css'
 import "react-color-palette/css";
 import { IColor, useColor } from "react-color-palette";
 import { Grid } from '../../model/Grid';

@@ -24,7 +24,7 @@
 
 .grid{
     border:5rem solid;
-    border-image:url(../Assets/1301811.svg);
+    border-image:url(../assets/1301811.svg);
     border-image-slice: 200;
     white-space: nowrap;
     margin-top: 5rem;

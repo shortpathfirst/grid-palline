@@ -25,3 +25,4 @@ yarn-error.log*
 
 /src/Algorithm/BinaryHeap.ts
 /src/_unusedComponents
+backend/__pycache__
