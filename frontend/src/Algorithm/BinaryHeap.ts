@@ -1,7 +1,7 @@
-import { Node } from "../model/Node";
+import { GridNode } from "../model/GridNode";
 // Correct Version.
 export class BinaryHeap {
-    heap: Node[];
+    heap: GridNode[];
 
     constructor() {
         this.heap = [];
@@ -12,7 +12,7 @@ export class BinaryHeap {
         return this.heap[0].distance;
     }
 
-    insert(node: Node) {
+    insert(node: GridNode) {
         this.heap.push(node);
 
         let current = this.heap.length - 1;
@@ -22,7 +22,7 @@ export class BinaryHeap {
         }
     }
 
-    extractMin(): Node | undefined {
+    extractMin(): GridNode | undefined {
         if (this.heap.length === 0) return undefined;
         if (this.heap.length === 1) return this.heap.pop();
 

@@ -1,5 +1,5 @@
 import '../../../styles/gridSetting.css'
-import { Node } from '../../../model/Node';
+import { GridNode } from '../../../model/GridNode';
 import { useMatrixContext } from '../../../hooks/MatrixProvider';
 
 function GridSizeSetting() {
@@ -7,9 +7,9 @@ function GridSizeSetting() {
   const { matrix, setMatrix } = useMatrixContext();
 
   function addLine() {
-    let newMatrixRow: Node[] = []
+    let newMatrixRow: GridNode[] = []
     for (let j = 0; j < matrix[0].length; j++) {
-      let a = new Node(matrix.length, j);
+      let a = new GridNode(matrix.length, j);
       newMatrixRow.push(a);
     }
     setMatrix([...matrix, newMatrixRow]);
@@ -22,7 +22,7 @@ function GridSizeSetting() {
   function addColumn() {
     setMatrix(prevMatrix => {
       return prevMatrix.map((row, i) => {
-        const newNode = new Node(i, prevMatrix[0].length);
+        const newNode = new GridNode(i, prevMatrix[0].length);
         return [...row, newNode];
       });
     });

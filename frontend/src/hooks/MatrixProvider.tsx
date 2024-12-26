@@ -1,10 +1,10 @@
 import { useState, createContext, ReactNode, useContext } from 'react';
 import { Grid } from '../model/Grid';
-import { Node } from '../model/Node';
+import { GridNode } from '../model/GridNode';
 
 const MatrixContext = createContext<{
-  matrix: Node[][];
-  setMatrix: React.Dispatch<React.SetStateAction<Node[][]>>
+  matrix: GridNode[][];
+  setMatrix: React.Dispatch<React.SetStateAction<GridNode[][]>>
 }>({
   matrix: [],
   setMatrix: () => { }

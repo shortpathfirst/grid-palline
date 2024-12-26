@@ -1,6 +1,6 @@
 import { Grid } from "./Grid";
 
-export class Node{
+export class GridNode{
     //  Node values are:
     //  color : #000000 hex
     //  '' for empty
@@ -20,7 +20,7 @@ export class Node{
     distance:number=Infinity;
     isVisited:boolean= false;
     isWall:boolean = false; 
-    previousNode!:Node; //undefined default //only for dijkstra
+    previousNode:GridNode | undefined; //undefined default //only for dijkstra
 
     setDefaultParam(){
         this.distance = Infinity;

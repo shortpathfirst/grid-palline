@@ -1,6 +1,6 @@
-import { Node } from "../model/Node";
+import { GridNode } from "../model/GridNode";
 
-export function changeMatrix(matrix:Node[][], iIndex:number,jIndex:number,value?:string,isWall?:boolean){
+export function changeMatrix(matrix:GridNode[][], iIndex:number,jIndex:number,value?:string,isWall?:boolean){
     let copy = matrix.map((row,i)=>{
         row.map((n,j)=>{
             if(iIndex===i && jIndex===j){

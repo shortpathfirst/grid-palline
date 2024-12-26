@@ -1,4 +1,4 @@
-import { Node } from "../model/Node"
+import { GridNode } from "../model/GridNode"
 export class RecursiveMaze{
     // // Write the color of the maze inside the node
     // // mark it as Wall

@@ -11,11 +11,8 @@ import RightSideBar from '../SideBarTools/RightSideBar';
 import LeftSideBar from '../SideBarTools/LeftSideBar';
 import { useMatrixContext } from '../../hooks/MatrixProvider';
 import { useOperationsContext } from '../../hooks/OperationsHook';
+import { DijkstraPoints } from '../../model/DijkstraPoint';
 
-type DijkstraPoints = {
-    START_NODE: [number, number],
-    FINISH_NODE: [number, number],
-}
 const DefaultDijkstraPoints: DijkstraPoints = {
     START_NODE: [10, 15],
     FINISH_NODE: [10, 25],
@@ -25,11 +22,9 @@ export default function GridPalline() {
 
     const { setMatrix } = useMatrixContext();
     const { setOperations } = useOperationsContext();
-    const [activeColor, setActiveColor] = useColor("#561ecb");                                  // Current ColorPalette
+    const [activeColor, setActiveColor] = useColor("#561ecb");                       // Current ColorPalette
     const [colorStory, setColorStory] = useState<IColor[]>([]);                      // List of color used
-
-    const [dijkstraPoints, setDijkstraPoints] = useState(DefaultDijkstraPoints);     // START AND END FOR MAZE
-    const [isSetWall, setWalls] = useState(false);                                   // WALL MODE
+    const [dijkstraPoints, setDijkstraPoints] = useState(DefaultDijkstraPoints);     // START and END for maze
     const [pallinaOrientation, setPallinaOrientation] = useState(true);              // Pallina Orientation
 
     function handleLoadImage(img: string[][]) {
@@ -72,8 +67,6 @@ export default function GridPalline() {
                 <LeftSideBar
                     onClear={() => handleClear()}
                     dijkstraPoints={dijkstraPoints}
-                    onSetWalls={() => setWalls(!isSetWall)}
-                    isWall={isSetWall}
                     handleLoadImage={handleLoadImage}
                     handleRotatePallina={() => setPallinaOrientation(!pallinaOrientation)}
                 ></LeftSideBar>
@@ -89,7 +82,6 @@ export default function GridPalline() {
                     color={activeColor}
                     handleAddColor={handleAddColor}
                     handleSetDijkstra={handleSetDijkstra}
-                    isSetWall={isSetWall}
                     isVertical={pallinaOrientation}
                 />
                 <RightSideBar color={activeColor} handleChangeColor={setActiveColor} />

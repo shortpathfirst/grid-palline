@@ -1,16 +1,16 @@
-import { Node } from "../../model/Node";
+import { GridNode } from "../../model/GridNode";
 export class RotateUtils{
 
 
- static rotateMatrix(matrix:Node[][]):Node[][]{
-    let newMatrix:Node[][]= []
+ static rotateMatrix(matrix:GridNode[][]):GridNode[][]{
+    let newMatrix:GridNode[][]= []
     let heigth = matrix[0].length;
     let width = matrix.length ;     
             
     for(let i=0;i<heigth;i++){
-        let currentRow:Node[]= [];
+        let currentRow:GridNode[]= [];
         for(let j=0;j<width;j++){
-            let newNode = new Node(i,j);
+            let newNode = new GridNode(i,j);
             newNode.value = matrix[matrix.length-1-j][i].value;
             currentRow.push(newNode);
         }
@@ -22,7 +22,7 @@ export class RotateUtils{
 }
 
     //SWAP IN PLACE
-    static smartRotate(matrix:Node[][]):void{
+    static smartRotate(matrix:GridNode[][]):void{
 
         let n = matrix.length;
         //Transpose

@@ -1,5 +1,5 @@
 import { IColor } from "react-color-palette";
-import { Node } from "../../model/Node";
+import { GridNode } from "../../model/GridNode";
 import { hexToRGBA } from "./hexToRGBA";
 
 
@@ -20,7 +20,7 @@ import { hexToRGBA } from "./hexToRGBA";
         return colorList;
     }
     
-    export function matrixToArray(matrix:Node[][]):string[][]{
+    export function matrixToArray(matrix:GridNode[][]):string[][]{
         let array:string[][] = [];
         matrix.map((row,i)=>{
             let arrayRow:string[]=[];
@@ -32,7 +32,7 @@ import { hexToRGBA } from "./hexToRGBA";
         return array;
 
     }
-    export function arrayToImg(matrix:Node[][]):HTMLImageElement{
+    export function arrayToImg(matrix:GridNode[][]):HTMLImageElement{
         // let pixels;
         // if(matrix[0][0] instanceof Node){
         //     pixels = matrixToArray(matrix);

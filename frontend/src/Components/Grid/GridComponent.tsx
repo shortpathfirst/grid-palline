@@ -15,16 +15,15 @@ import { useOperationsContext } from '../../hooks/OperationsHook';
 
 interface GridProps {
     color: IColor;       //Color to use
-    isSetWall: boolean;  //Setting walls
     handleAddColor: Function;
     handleSetDijkstra: Function;
     isVertical: boolean;
 }
 
-function GridComponent({ handleAddColor, color, isSetWall, handleSetDijkstra, isVertical }: GridProps) {
+function GridComponent({ handleAddColor, color, handleSetDijkstra, isVertical }: GridProps) {
     const [draw, setDraw] = useState(false);           //Activate pen mouse up and mouse down
     const { matrix, setMatrix } = useMatrixContext();
-    const { gridState, setGridState } = useGridState();
+    const { gridState,isSetWall, setGridState } = useGridState();
     const {pushComplexOperations} = useOperationsContext();
 
     useEffect(() => {

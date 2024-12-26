@@ -1,4 +1,4 @@
-import { Node } from "../model/Node";
+import { GridNode } from "../model/GridNode";
 import { Operation } from "../model/Operation";
 export class FloodFillAlgorithm{
 
@@ -16,7 +16,7 @@ export class FloodFillAlgorithm{
     }
      
     // Function to run bfs
-    bfs(n:number, m:number, data:Node[][], X:number, Y:number, color:string,walls:boolean):[Node[][],Operation[]]
+    bfs(n:number, m:number, data:GridNode[][], X:number, Y:number, color:string,walls:boolean):[GridNode[][],Operation[]]
     {
         for(let nodeRow of data){
             for(let node of nodeRow){

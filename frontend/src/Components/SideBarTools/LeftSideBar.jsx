@@ -42,9 +42,7 @@ function reducer(state, action) {
 }
 
 function LeftSideBar({
-  onSetWalls,
   onClear,
-  isWall,
   dijkstraPoints,
   handleLoadImage,
   handleRotatePallina,
@@ -125,11 +123,7 @@ function LeftSideBar({
                 onClick={() => dispatch({ type: 'TOGGLE_COLLAPSE' })}
               ></MenuItem>
 
-              <MazeTools
-                onSetWalls={onSetWalls}
-                isWall={isWall}
-                dijkstraPoints={dijkstraPoints}
-              />
+              <MazeTools dijkstraPoints={dijkstraPoints}/>
 
               <ControlTools
                 handleRotatePallina={handleRotatePallina}

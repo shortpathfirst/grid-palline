@@ -1,4 +1,4 @@
-import { Node } from "../../model/Node";
+import { GridNode } from "../../model/GridNode";
 
 export class LoadUtils{
     /**
@@ -6,15 +6,15 @@ export class LoadUtils{
      * @returns a Node[][] Matrix the dimension of the input
      * **/
     static loadImg(img:string[][]){
-        let newMatrix:Node[][]= []
+        let newMatrix:GridNode[][]= []
         // let width = matrix[0].length > img.data[0].length ? matrix[0].length : img.data[0].length;
         // let heigth = matrix.length > img.data.length ? matrix.length : img.data.length ;
         let width = img[0].length;
         let heigth = img.length;
         for(let i=0;i<heigth;i++){
-            let currentRow:Node[]= [];
+            let currentRow:GridNode[]= [];
             for(let j=0;j<width;j++){
-                let a = new Node(i,j);
+                let a = new GridNode(i,j);
                 if(i<img.length&&j<img[0].length)
                     a.value = img[i][j];
                 currentRow.push(a);
