@@ -1,7 +1,8 @@
-.container {
+.sideBarContainer {
     display: "flex";
     height: "100vh";
     user-select: none;
+    z-index: 5;
 }
 
 .mainMenu {

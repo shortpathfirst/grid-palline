@@ -85,7 +85,7 @@ function LeftSideBar({
   );
 
   return (
-    <div className="container">
+    <div className="sideBarContainer">
       <Sidebar
         style={{ height: '100%', position: 'fixed' }}
         collapsedWidth={'70px'}

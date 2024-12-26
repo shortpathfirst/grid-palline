@@ -24,10 +24,10 @@ function ColorStory({ colorStory, setColorStory, setColor }: Props) {
         colorStory.map((el, i) => {
           return (
             <div key={`div ${el.hex}`} className='prevColor'>
-              <button className='colorBox'
+              <button className={`colorBox ${activeColor===i?"gradient-border":''}`}
                 onClick={() => handleColorClick(el, i)}
                 onContextMenu={(e) => handleColorRightClick(e, el)}
-                style={{ backgroundColor: el.hex, border: activeColor === i ? "3px solid white" : "" }}>
+                style={{ backgroundColor: el.hex}}>
               </button >{el.hex}
             </div>
           )
