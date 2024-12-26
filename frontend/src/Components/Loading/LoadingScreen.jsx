@@ -3,6 +3,7 @@ import GridPalline from '../Grid/GridPalline';
 import Welcome from './Welcome';
 import { MatrixProvider } from '../../hooks/MatrixProvider';
 import { GridStateProvider } from '../../hooks/GridStateHook';
+import { OperationsProvider } from '../../hooks/OperationsHook';
 
 
 function LoadingScreen() {
@@ -23,7 +24,9 @@ function LoadingScreen() {
     <div>
       <MatrixProvider>
         <GridStateProvider>
+          <OperationsProvider>
           <GridPalline />
+          </OperationsProvider>
         </GridStateProvider>
       </MatrixProvider>
 

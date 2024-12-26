@@ -27,7 +27,7 @@ const DefaultDijkstraPoints:DijkstraPoints ={
 export default function GridPalline() {
 
     const {matrix,setMatrix} = useMatrixContext();
-
+   
     const [color, setColor] = useColor("#561ecb");                                  // Current ColorPalette
     const [colorStory,setColorStory] = useState<IColor[]>([]);                      // List of color used
 
