@@ -1,7 +1,7 @@
 import {  useState } from 'react'
 import '../../styles/grid.css'
-import { IColor, useColor } from "react-color-palette";
 import "react-color-palette/css";
+import { IColor, useColor } from "react-color-palette";
 import { Grid } from '../../model/Grid';
 import {countColors} from '../../Controller/Utils/imgUtils';
 import { LoadUtils } from '../../Controller/Utils/LoadUtils';
