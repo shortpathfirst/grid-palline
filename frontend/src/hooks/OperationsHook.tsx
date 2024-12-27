@@ -1,7 +1,6 @@
 import { useState, createContext, ReactNode, useContext } from 'react';
 import { OperationOnGrid } from '../Controller/OperationOnGrid';
 import { useMatrixContext } from './MatrixProvider';
-import { changeMatrix } from '../Service/MatrixService';
 
 const OperationsContext = createContext<{
     operationList: OperationOnGrid[];
@@ -19,7 +18,7 @@ const OperationsContext = createContext<{
 
 const OperationsProvider = ({ children }: { children: ReactNode }) => {
     const [operationList, setOperations] = useState<OperationOnGrid[]>([]);
-    const { matrix, setMatrix } = useMatrixContext();
+    const { changeMatrixValue } = useMatrixContext();
 
     function pushOperations(operation: OperationOnGrid) {
         operationList.push(operation);
@@ -37,11 +36,11 @@ const OperationsProvider = ({ children }: { children: ReactNode }) => {
                 break;
             let simpleOperations = lastoperation.undoOperation();
             if (simpleOperations.length > 1) {
-                simpleOperations.forEach(el => setMatrix(changeMatrix(matrix, el.i, el.j, el.prevColor)))
+                simpleOperations.forEach(el => changeMatrixValue(el.i, el.j, el.prevColor));
                 return; // Complex operation stop the undo
             } else if (simpleOperations.length === 1) {
                 const { i, j, prevColor } = simpleOperations[0];
-                setMatrix(changeMatrix(matrix, i, j, prevColor, false));
+                changeMatrixValue(i, j, prevColor, false);
                 count++;
             }
         }

@@ -8,7 +8,6 @@ import { FaFontAwesomeFlag } from "react-icons/fa";
 import { dijkstraOperation } from '../../../Controller/dijkstraOperation';
 import { Dijkstra } from '../../../Algorithm/Dijkstra';
 import { useMatrixContext } from '../../../hooks/MatrixProvider';
-import { changeMatrix } from '../../../Service/MatrixService';
 import { useGridState } from '../../../hooks/GridStateHook';
 import { grid } from '../../../model/GridStatus';
 import { useOperationsContext } from '../../../hooks/OperationsHook';
@@ -21,7 +20,7 @@ type Props = {
 
 function MazeTools({ dijkstraPoints }: Props) {
 
-  const { matrix, setMatrix } = useMatrixContext();
+  const { matrix, resetParams,changeMatrixValue } = useMatrixContext();
   const { gridState, isSetWall, setGridState, switchWalls } = useGridState();
   const { pushOperations } = useOperationsContext();
 
@@ -35,21 +34,6 @@ function MazeTools({ dijkstraPoints }: Props) {
       gridState === grid.finish ? <FaFlagCheckered />
         : <FaFontAwesomeFlag />,
   };
-
-  function resetParams() {
-    let copy = matrix.map((row, i) =>
-      row.map((_, j) => {
-        matrix[i][j].isVisited = false;
-        matrix[i][j].distance = Infinity;
-        matrix[i][j].previousNode = null;
-        matrix[i][j].isStart = false;
-        matrix[i][j].isFinish = false;
-        return matrix[i][j];
-      })
-    );
-    setMatrix(copy);
-  }
-
   function animateDijkstra(visitedNodes: GridNode[], nodesInshortestPath: GridNode[]) {
     let dijkstraOperationList = new dijkstraOperation();
     for (let i = 0; i < visitedNodes.length; i++) {
@@ -62,7 +46,7 @@ function MazeTools({ dijkstraPoints }: Props) {
       }
       const node = visitedNodes[i];
       setTimeout(() => {
-        setMatrix(changeMatrix(matrix, node.row, node.col, styles.dijkstraColor));
+        changeMatrixValue( node.row, node.col, styles.dijkstraColor);
       }, 10 * i);
 
       dijkstraOperationList.addOperation({
@@ -80,7 +64,7 @@ function MazeTools({ dijkstraPoints }: Props) {
     for (let i = 0; i < nodesInshortestPath.length; i++) {
       const node = nodesInshortestPath[i];
       setTimeout(() => {
-        setMatrix(changeMatrix(matrix, node.row, node.col, styles.dijkstraPath));
+        changeMatrixValue( node.row, node.col, styles.dijkstraPath);
       }, 50 * i);
       dijkstraOperationList.addOperation({
         i: node.row,
