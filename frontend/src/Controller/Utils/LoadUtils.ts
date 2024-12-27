@@ -15,7 +15,7 @@ export class LoadUtils {
     );
   }
 
-  static loadImageFile(result: string) { //result is DATAURI
+  static loadImageFile(result: string): Promise<HTMLImageElement> { //result is DATAURI
     return new Promise(resolve => {
       //Image is HTML element img
       let img = new Image();
@@ -25,11 +25,12 @@ export class LoadUtils {
       img.src = result;
     })
   }
-  static loadFile(file: any) {
+  static loadFile(file: any): Promise<string> {
     return new Promise((resolve, reject) => {
       let fileReader = new FileReader();
       fileReader.onload = () => {
-        resolve(fileReader.result);
+        if (fileReader.result)
+          resolve(fileReader.result as string);
       };
       fileReader.onerror = reject;
       fileReader.readAsDataURL(file);

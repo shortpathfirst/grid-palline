@@ -12,31 +12,28 @@ import { BsZoomOut } from "react-icons/bs";
 // size: 4120
 // type: "image/gif"
 // webkitRelativePath: ""
+type Props = {
+  handleLoadImage: (arrayRGB: string[][]) => void,
+}
+function FileSelector({ handleLoadImage }: Props) {
 
-function FileSelector({ handleLoadImage }) {
-
-  const [file, setFile] = useState(null);
+  const [file, setFile] = useState<File | null>(null);
   const [maxSizeScale, setScale] = useState(75);
   const [ANTIALIASING, setAntialiasing] = useState(false);
   const [height, setHeight] = useState(120);
-  const fileSelector = useRef(null);
-  const canvasRef = useRef(null);
-  const canvasDrawRef = useRef(null);
+  const fileSelector = useRef<HTMLInputElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const canvasDrawRef = useRef<HTMLCanvasElement>(null);
 
   const style = {
-    menu: file ? { display: 'flex', justifyContent: 'center', alignItems: 'center', height: height, backgroundColor: 'rgb(214, 201, 223)' } : { display: "none" },
+    menu: file ? { display: 'flex', justifyContent: 'center', alignItems: 'center', height: height, backgroundColor: 'rgb(214, 201, 223)' }
+      : { display: "none" },
     canvas_height: 120,
     canvas_width: 200,
     itemState: !file ? { display: 'none' } : undefined
   }
 
-  useEffect(() => {
-    if (file)
-      handleChange(file)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [maxSizeScale, ANTIALIASING]);
-
-  const drawImage = (ctx, img) => {
+  const drawImage = (ctx: CanvasRenderingContext2D, img: HTMLImageElement) => {
 
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height); //To empty the canvas
     ctx.imageSmoothingEnabled = ANTIALIASING; //DISABLE ANTIALIASING
@@ -54,7 +51,7 @@ function FileSelector({ handleLoadImage }) {
     }
     return [width, height];
   }
-  const drawThumbnail = (drawCxt, img, width, height) => {
+  const drawThumbnail = (drawCxt: CanvasRenderingContext2D, img: HTMLImageElement, width: number, height: number) => {
     let ratio = width / height;
     let drawHeight = Math.min(style.canvas_width / ratio, style.canvas_height);
     drawCxt.clearRect(0, 0, drawCxt.canvas.width, drawCxt.canvas.height); //To empty the canvas
@@ -62,55 +59,50 @@ function FileSelector({ handleLoadImage }) {
   }
 
   const onSelectImage = () => {
-    fileSelector.current.click();
+    if (fileSelector.current)
+      fileSelector.current.click();
   }
-  const onFileChange = (event) => {
+  const onFileChange = (event: any) => {
     event.stopPropagation();
     event.preventDefault();
     let file = event.target.files[0];
-    if (!file)
-      return;
+    if (!file) return;
 
     setFile(file);
     setScale(75); //reset Scale
     handleChange(file);
   }
 
-  const handleChange = (file) => {//trycatch
-    let fileReader, isCancel = false;
+  const handleChange = (file: File) => {
 
-    const drawCxt = canvasRef.current.getContext("2d");
-    // var ctx = document.createElement("canvas",).getContext('2d'); 
+    let isCancel = false;
+    if (!canvasRef.current || !canvasDrawRef.current) {
+      return;
+    }
+    const drawCxt = canvasRef.current.getContext("2d")
     const ctx = canvasDrawRef.current.getContext("2d");
+
     // READ FILE 
     LoadUtils.loadFile(file).then((result) => {
       if (result && !isCancel) {
         //LOAD IMAGE 
-        LoadUtils.loadImageFile(result).then((img) => { 
+        LoadUtils.loadImageFile(result).then((img) => {
           setHeight(Math.min(style.canvas_height, img.height));
           //DRAW CANVAS
-          let [width, height] = drawImage(ctx, img); 
+          let [width, height] = drawImage(ctx!, img);
           //DRAW THUMBNAIL
-          drawThumbnail(drawCxt, img, width, height); 
-          let imgData = ctx.getImageData(0, 0, width, height);
+          drawThumbnail(drawCxt!, img, width, height);
+          let imgData = ctx!.getImageData(0, 0, width, height);
           //Convert to HEX
-          let hexArray = ImageUtils.getArrayData(imgData, width); 
+          let hexArray = ImageUtils.getArrayData(imgData, width);
           handleLoadImage(hexArray);
-
-        });
+        }).catch(()=>console.error("Could not load the image"));
       }
-    });
-
-    return () => {
-      isCancel = true;
-      if (fileReader && fileReader.readyState === 1) {
-        fileReader.abort();
-      }
-    }
+    }).catch(()=>console.error("Could not read the file"));
   }
 
-  const handleUpScale = () => { setScale(maxSizeScale + 5); }
-  const handleDownScale = () => { setScale(maxSizeScale - 5); }
+  const handleUpScale = () => setScale(maxSizeScale + 5); 
+  const handleDownScale = () =>  setScale(maxSizeScale - 5); 
   const switchAntialiasing = () => setAntialiasing(!ANTIALIASING);
 
   return (
