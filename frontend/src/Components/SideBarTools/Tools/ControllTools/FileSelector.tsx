@@ -33,6 +33,12 @@ function FileSelector({ handleLoadImage }: Props) {
     itemState: !file ? { display: 'none' } : undefined
   }
 
+  useEffect(() => {
+    if (file)
+      handleChange(file)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [maxSizeScale, ANTIALIASING]);
+
   const drawImage = (ctx: CanvasRenderingContext2D, img: HTMLImageElement) => {
 
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height); //To empty the canvas
