@@ -1,13 +1,8 @@
-import { useState, useEffect } from 'react';
-import GridPalline from '../Grid/GridPalline';
-
-import { MatrixProvider } from '../../hooks/MatrixProvider';
-import { GridStateProvider } from '../../hooks/GridStateHook';
-import { OperationsProvider } from '../../hooks/OperationsHook';
+import { useState, useEffect, ReactNode } from 'react';
 import Loading from './Loading';
 
 
-function LoadingScreen() {
+function LoadingScreen({ children }: { children: ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -17,21 +12,15 @@ function LoadingScreen() {
     }, 500);
   }, []);
 
-  if (isLoading) {
-    return <Loading />
-  }
-
   return (
-    <div>
-      <MatrixProvider>
-        <GridStateProvider>
-          <OperationsProvider>
-            <GridPalline />
-          </OperationsProvider>
-        </GridStateProvider>
-      </MatrixProvider>
+    <>
+      {isLoading ? <Loading /> :
+        <>
+          {children}
+        </>
+      }
+    </>
 
-    </div>
   );
 }
 

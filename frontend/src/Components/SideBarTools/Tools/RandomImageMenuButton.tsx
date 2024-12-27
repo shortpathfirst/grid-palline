@@ -1,5 +1,5 @@
 
-import { fetchRandomImage } from '../../../Service/imgService';
+import { fetchRandomImage } from '../../../api/imgService';
 import { MenuItem } from 'react-pro-sidebar';
 
 const rndImageStyle = {

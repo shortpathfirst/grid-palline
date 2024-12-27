@@ -1,5 +1,5 @@
-import { Operation } from "../model/Operation";
-import { OperationOnGrid } from "./OperationOnGrid";
+import { Operation } from "../../model/Operation";
+import { OperationOnGrid } from "../Operations/OperationOnGrid";
 
 export class dijkstraOperation implements OperationOnGrid{
 

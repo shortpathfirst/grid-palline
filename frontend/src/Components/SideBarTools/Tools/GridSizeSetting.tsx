@@ -6,7 +6,7 @@ function GridSizeSetting() {
 
   const { matrix, setMatrix } = useMatrixContext();
 
-  function addLine() {
+  const addLine = () => {
     let newMatrixRow: GridNode[] = []
     for (let j = 0; j < matrix[0].length; j++) {
       let a = new GridNode(matrix.length, j);
@@ -15,11 +15,11 @@ function GridSizeSetting() {
     setMatrix([...matrix, newMatrixRow]);
   }
 
-  function removeLine() {
+  const removeLine = () => {
     setMatrix(matrix.slice(0, matrix.length - 1))
   }
 
-  function addColumn() {
+  const addColumn = () => {
     setMatrix(prevMatrix => {
       return prevMatrix.map((row, i) => {
         const newNode = new GridNode(i, prevMatrix[0].length);
@@ -28,7 +28,7 @@ function GridSizeSetting() {
     });
   }
 
-  function removeColumn() {
+  const removeColumn = () => {
     setMatrix(prevMatrix => {
       return prevMatrix.map(row => row.slice(0, -1));
     });
@@ -39,20 +39,20 @@ function GridSizeSetting() {
     <div className='gridSet'>
       <div className='poleSet'>
         <div>
-          <button className='backButton up' onClick={() => removeLine()}>
+          <button className='backButton up' onClick={removeLine}>
             -
           </button>
         </div>
         <div>
-          <button className='backButton left' onClick={() => removeColumn()}>
+          <button className='backButton left' onClick={removeColumn}>
             -
           </button>
-          <button className='backButton right' onClick={() => addColumn()}>
+          <button className='backButton right' onClick={addColumn}>
             +
           </button>
         </div>
         <div>
-          <button className='backButton bottom' onClick={() => addLine()}>
+          <button className='backButton bottom' onClick={addLine}>
             +
           </button>
         </div>

@@ -5,7 +5,7 @@ import { PiWallLight } from "react-icons/pi";
 import { Bs1Circle } from "react-icons/bs";
 import { FaFlagCheckered } from "react-icons/fa6";
 import { FaFontAwesomeFlag } from "react-icons/fa";
-import { dijkstraOperation } from '../../../Controller/dijkstraOperation';
+import { dijkstraOperation } from '../../../Controller/Operations/dijkstraOperation';
 import { Dijkstra } from '../../../Algorithm/Dijkstra';
 import { useMatrixContext } from '../../../hooks/MatrixProvider';
 import { useGridState } from '../../../hooks/GridStateHook';

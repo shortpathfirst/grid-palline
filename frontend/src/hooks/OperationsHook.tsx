@@ -1,5 +1,5 @@
 import { useState, createContext, ReactNode, useContext } from 'react';
-import { OperationOnGrid } from '../Controller/OperationOnGrid';
+import { OperationOnGrid } from '../Controller/Operations/OperationOnGrid';
 import { useMatrixContext } from './MatrixProvider';
 
 const OperationsContext = createContext<{

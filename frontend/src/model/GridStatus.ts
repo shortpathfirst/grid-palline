@@ -4,5 +4,4 @@ export const enum grid{
     finish=1,
     fill=2,
     eraser=3
-    //setwall
 }

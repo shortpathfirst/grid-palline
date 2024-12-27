@@ -1,6 +1,9 @@
 import axios from 'axios';
-
-export const setLoadingInterceptor = ({ showLoading, hideLoading }) => {
+type Props = {
+  showLoading: () => void,
+  hideLoading: () => void,
+}
+const setLoadingInterceptor = ({ showLoading, hideLoading }: Props) => {
   axios.interceptors.request.use(
     req => {
       if (!(req.data instanceof FormData)) showLoading();

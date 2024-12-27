@@ -1,4 +1,4 @@
-import { Operation } from "../model/Operation";
+import { Operation } from "../../model/Operation";
 import { OperationOnGrid } from "./OperationOnGrid";
 
 
