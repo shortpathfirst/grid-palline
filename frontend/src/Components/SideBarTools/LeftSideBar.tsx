@@ -45,7 +45,7 @@ function LeftSideBar({
   const { matrix, setMatrix } = useMatrixContext();
   const { gridState, setGridState } = useGridState()
   const { undoOperations } = useOperationsContext();
-  const [leftSidebarCollapsed, setLeftCollapsed] = useState(false);
+  const [leftSidebarCollapsed, setLeftCollapsed] = useState(true);
 
   const floodFillStyle = gridState === grid.fill ? { backgroundColor: '#9f8dc6' } : {};
 

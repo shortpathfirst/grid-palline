@@ -27,8 +27,7 @@
     border-image:url(../assets/1301811.svg);
     border-image-slice: 200;
     white-space: nowrap;
-    margin-top: 5rem;
-    margin-left:2rem;
+    margin:5rem auto;
 }
 .rows{
     display: flex;

@@ -46,7 +46,7 @@ export default function GridPalline() {
         }
     }
     const rotatePallina = () => setPallinaOrientation(!pallinaOrientation)
-    const handleClear = ()=>{
+    const handleClear = () => {
         setMatrix(Grid.createNodes(50, 18));
         setOperations([]);
     }
@@ -83,6 +83,7 @@ export default function GridPalline() {
                     handleSetDijkstra={handleSetDijkstra}
                     isVertical={pallinaOrientation}
                 />
+
                 <RightSideBar color={activeColor} handleChangeColor={setActiveColor} />
 
             </div>

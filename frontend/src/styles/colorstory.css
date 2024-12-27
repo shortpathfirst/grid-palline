@@ -6,14 +6,12 @@
 
 }
 
-.prevColorBox {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin:0 2rem 0 70px;
-    padding-top: 20px ;
-    min-width: 8rem;
-    max-height: 100%;
+.prevColorBox{
+    position: absolute;
+    top: 0;
+    left: 90px;
+    padding: 20px 5px 10px 5px;
+    max-height: 100vh;
     overflow-y: auto;
 }
 
