@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import GridPalline from '../Grid/GridPalline';
-import Welcome from './Welcome';
+
 import { MatrixProvider } from '../../hooks/MatrixProvider';
 import { GridStateProvider } from '../../hooks/GridStateHook';
 import { OperationsProvider } from '../../hooks/OperationsHook';
+import Loading from './Loading';
 
 
 function LoadingScreen() {
@@ -17,7 +18,7 @@ function LoadingScreen() {
   }, []);
 
   if (isLoading) {
-    return <Welcome />
+    return <Loading />
   }
 
   return (
@@ -25,7 +26,7 @@ function LoadingScreen() {
       <MatrixProvider>
         <GridStateProvider>
           <OperationsProvider>
-          <GridPalline />
+            <GridPalline />
           </OperationsProvider>
         </GridStateProvider>
       </MatrixProvider>

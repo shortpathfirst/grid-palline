@@ -14,7 +14,7 @@ import { useOperationsContext } from '../../hooks/OperationsHook';
 import '../../styles/grid.css'
 
 interface GridProps {
-    color: IColor;       //Color to use
+    color: IColor;
     handleAddColor: Function;
     handleSetDijkstra: Function;
     isVertical: boolean;
